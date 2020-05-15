@@ -1,0 +1,24 @@
+{
+    "name": "semknox/semknox-core",
+    "description": "Core package to communicate with Semknox API",
+    "type": "library",
+    "require": {
+        "php": ">=5.5",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "phpstan/phpstan": "^0.12.25"
+    },
+    "authors": [
+        {
+            "name": "Youbility Software",
+            "email": "info@youbility.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Semknox\\Core\\": "src/"
+        }
+    }
+}
