@@ -37,11 +37,12 @@ TODO: Tabelle mit Infos zu Config-Einstellungen
 Before you can start searching, you need to upload some of your products to the Semknox backend. Products uploaded will then be analyzed by Semknox for an enhanced search experience.
 
 ~~~php
+/* @var $uploader \Semknox\Core\Services\InitialUploadService */
 $uploader = $sxCore->getInitialUploader();
 
 // this method signals the beginning of a new initial product upload
 // it has additional configuration parameters. See the implementation for details. 
-$uploader->init();
+$uploader->addNew();
 
 // collect products from your shop system. $products is an array of your products
 // as an array that contains the required semknox information.

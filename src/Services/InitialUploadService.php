@@ -107,7 +107,7 @@ class InitialUploadService {
      * Config (todo):
      *  - expectedNumberOfProducts     (how many products we're expecting in total, helps with status report)
      */
-    private function addNew($config = [])
+    public function addNew($config = [])
     {
         $directory = $this->workingDirectory->nextWorkingDirectoryName();
 
