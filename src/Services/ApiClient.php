@@ -27,9 +27,9 @@ class ApiClient
 
 	/**
 	 * Request parameters (GET parameters)
-	 * @var
+	 * @var array
 	 */
-	protected $params;
+	protected $params = [];
 
 	/**
 	 * The client to be used

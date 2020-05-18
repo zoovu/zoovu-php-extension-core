@@ -66,6 +66,8 @@ class InitialUploadService {
 
         $this->config = $config;
 
+        $this->workingDirectory = new WorkingDirectory($this->config);
+
         $this->init();
     }
 
@@ -90,8 +92,6 @@ class InitialUploadService {
     {
         $this->transformerClass = $this->config->getProductTransformer();
 
-        $this->workingDirectory = new WorkingDirectory($this->config);
-
         $this->status = new Status($this->workingDirectory);
 
         $this->productCollection = new ProductCollection($this->workingDirectory, [
@@ -109,12 +109,9 @@ class InitialUploadService {
      */
     public function startCollecting($config = [])
     {
-        $directory = $this->workingDirectory->createNew();
+        $this->workingDirectory = $this->workingDirectory->createNew();
 
-        $this->productCollection->createNextProductsFile();
-
-        // put initial status file in directory
-        file_put_contents($directory . 'info.json', $this->getInfoFileContent());
+        $this->init();
     }
 
     /**

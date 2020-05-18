@@ -87,7 +87,7 @@ class WorkingDirectory
      * Create a new directory called "semknox-upload-<time>" in $config->getStoragePath().
      * If configuration value 'initialUploadIdentifier' has been set "semknox-upload" is replaces with the identifier.
      *
-     * @return string
+     * @return self
      * @throws FilePermissionException
      * @throws \Semknox\Core\Exceptions\ConfigurationException
      */
@@ -103,7 +103,9 @@ class WorkingDirectory
             mkdir($directory);
         }
 
-        return $directory;
+        $this->workingDirectory = $directory;
+
+        return $this;
     }
 
     /**
@@ -111,7 +113,7 @@ class WorkingDirectory
      * @return string
      * @throws \Semknox\Core\Exceptions\ConfigurationException
      */
-    public function getNextWorkingDirectoryName()
+    private function getNextWorkingDirectoryName()
     {
         $storagePath = rtrim($this->config->getStoragePath(), '/');
 
@@ -122,19 +124,25 @@ class WorkingDirectory
         return "$storagePath/$identifier-$time." . Status::PHASE_COLLECTING;
     }
 
-
-    public function rename($newDirectory)
+    /**
+     * Rename the current working directory.
+     * @param $newDirectoryName
+     *
+     * @return bool
+     * @throws \Semknox\Core\Exceptions\ConfigurationException
+     */
+    public function rename($newDirectoryName)
     {
         $directory = $this->getWorkingDirectory();
 
-        $newDirectory = dirname($directory)
-                        . '/'
-                        . $newDirectory;
+        $newDirectoryName = dirname($directory)
+                            . '/'
+                            . $newDirectoryName;
 
-        $status = rename($directory, $newDirectory);
+        $status = rename($directory, $newDirectoryName);
 
         if($status) {
-            $this->workingDirectory = $newDirectory;
+            $this->workingDirectory = $newDirectoryName;
         }
 
         return $status;
