@@ -33,7 +33,7 @@ class ApiClient
 
 	/**
 	 * The client to be used
-	 * @var Varien_Http_Client
+	 * @var Client
 	 */
 	protected $client;
 
@@ -43,20 +43,31 @@ class ApiClient
 	 */
 	protected $_contentType = 'application/x-www-form-urlencoded';
 
-	protected $storeId;
+    /**
+     * The api key for the current request
+     * @var string
+     */
+	protected $apiKey;
+
+    /**
+     * The project id for the current request
+     * @var int
+     */
+	protected $projectId;
 
 
 	public function __construct(SxConfig $config)
 	{
-		$this->storeId = $config->getStoreId();
-
 		$this->client = new Client([
 		    'base_uri' => $config->getApiUrl(),
-            'timeout'  => $config->getTimeout()
+            'timeout'  => $config->getTimeout(),
         ]);
 
-		$this->setAuthentication($config->getStoreId(), $config->getApiKey());
-	}
+		$this->setAuthentication(
+		    $config->getProjectId(),
+            $config->getApiKey()
+        );
+    }
 
 	/**
 	 * Set the query for the current request
@@ -76,10 +87,6 @@ class ApiClient
 	 */
 	public function setParam($name, $val)
 	{
-		if(is_array($val)) {
-			$val = json_encode($val);
-		}
-
 		$this->params[$name] = $val;
 
 		return $this;
@@ -131,17 +138,24 @@ class ApiClient
 	 * @throws GuzzleException
 	 * @throws \RuntimeException
 	 */
-	public function request($method, $uri, $logRequest = false)
+	public function request($method, $uri)
 	{
-        $uri = $this->replaceParametersInUri($uri);
+	    $uri = $this->replaceParametersInUri($uri);
 
         $requestParams = $this->makeGuzzleRequestParams($method);
 
+//        var_dump('todo: '); var_dump($method); var_dump($uri); var_dump($requestParams); echo '<br>';
         $response = $this->client->request($method, $uri, $requestParams);
+//var_dump('done: '); var_dump($method); var_dump($uri); var_dump($requestParams); echo '<br><br>';
 
 		$content = $response->getBody()->getContents();
 
+		// clear params
+        $this->params = [];
+
 		return json_decode($content, true);
+
+
 		// TODO: check if any of that is still needed
 		if(in_array(strtolower($method), array('get', 'delete'))) {
 			$this->client->setParameterGet($this->params);
@@ -170,6 +184,30 @@ class ApiClient
 		}
 
 		return $request;
+	}
+
+
+    /**
+     * Send a request asynchronously.
+     * @param $method
+     * @param $uri
+     * @param $params
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function requestAsync($method, $uri, $params)
+	{
+        if($params) {
+            foreach($params as $key => $value) {
+                $this->setParam($key, $value);
+            }
+        }
+
+        $uri = $this->replaceParametersInUri($uri);
+
+        $requestParams = $this->makeGuzzleRequestParams($method);
+
+        return $this->client->requestAsync($method, $uri, $requestParams);
 	}
 
 	/**
@@ -218,18 +256,28 @@ class ApiClient
 		return $uri;
 	}
 
+    public function getAuthentication()
+    {
+        $queryParams = [];
+        
+        if($this->apiKey) $queryParams['apiKey'] = $this->apiKey;
+        if($this->projectId) $queryParams['projectId'] = $this->projectId;
+
+        return $queryParams;
+	}
+
 	/**
 	 * Set user authentification
 	 *
-	 * @param int $storeId
+	 * @param int $projectId
 	 * @param string $apiKey
 	 *
 	 * @return $this
 	 */
-	public function setAuthentication($storeId, $apiKey)
+	public function setAuthentication($projectId, $apiKey)
 	{
-		$this->setParam('storeId', $storeId);
-		$this->setParam('apiKey', $apiKey);
+		$this->projectId = $projectId;
+		$this->apiKey = $apiKey;
 
 		return $this;
 	}
@@ -242,8 +290,8 @@ class ApiClient
 	protected function isAuthenticationSet()
 	{
 		return isset(
-			$this->params['storeId'],
-			$this->params['apiKey']
+			$this->projectId,
+			$this->apiKey
 		);
 	}
 
@@ -255,12 +303,12 @@ class ApiClient
      */
     private function replaceParametersInUri($uri)
     {
-        $params = ['customerId', 'storeId'];
+        $uri = str_replace(':apiKey', $this->apiKey, $uri);
+        $uri = str_replace(':projectId', $this->projectId, $uri);
 
-        foreach($params as $param) {
-            if(strpos($uri, ':' . $param) !== false) {
-                $uri = str_replace(":$param", $this->params[$param], $uri);
-                unset($this->params[$param]);
+        foreach($this->params as $key => $value) {
+            if(strpos($uri, ':' . $key) !== false) {
+                $uri = str_replace(":$key", $value, $uri);
             }
         }
 
@@ -275,15 +323,19 @@ class ApiClient
      */
     private function makeGuzzleRequestParams($method)
     {
-        $params = [];
+        // apikey and projectId always url parameter
+        $guzzleParams = [
+            'query' => $this->getAuthentication(),
+//            'debug' => true
+        ];
 
         if(in_array(strtolower($method), array('get', 'delete'))) {
-            $params['query'] = $this->params;
+            $guzzleParams['query'] = array_merge($this->params, $guzzleParams['query']);
         }
         else {
-            $params['json'] = $this->params;
+            $guzzleParams['json'] = $this->params;
         }
 
-        return $params;
+        return $guzzleParams;
     }
 }

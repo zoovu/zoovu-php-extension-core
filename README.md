@@ -14,14 +14,15 @@ Before you can use any of the features you have to configure the core.
 ~~~php
 $configValues = [
     // required options
-    'apiKey'   => '<your api key>',
-    'storeId'  => '<your storeId>',  
+    'apiKey'    => '<your api key>',
+    'projectId' => '<your projectId>',  
     
     // optional options
     'apiUrl' => 'https://dev-api-v3.semknox.com/',
     'productTransformer' => MagentoSemknoxProductTransformer::class,
     'storagePath'        => '/path/to/writable/directory',
     'initialUploadBatchSize' => 200,
+    'initialUploadDirectoryIdentifier' => 'semknox-upload',
     'requestTimeout' => 15
 ];
 

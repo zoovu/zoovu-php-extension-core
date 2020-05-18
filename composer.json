@@ -3,12 +3,14 @@
     "description": "Core package to communicate with Semknox API",
     "type": "library",
     "require": {
-        "php": ">=5.5",
+        "php": ">=5.6",
         "guzzlehttp/guzzle": "^6.5"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
-        "phpstan/phpstan": "^0.12.25"
+        "phpstan/phpstan": "^0.12.25",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.2"
     },
     "authors": [
         {

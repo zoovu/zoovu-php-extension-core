@@ -41,14 +41,32 @@ class SxConfig {
         return $this->get('apiKey', '');
     }
 
-    public function getStoreId()
+    public function getProjectId()
     {
-        return $this->get('storeId');
+        return $this->get('projectId');
     }
 
     public function getTimeout()
     {
         return $this->get('requestTimeout', 15);
+    }
+
+    /**
+     * Get the maximum batch size for the initial upload. This size defines how many products are collected in memory before they are permanented to a file. This also defines how many products are sent to semknox in one request.
+     * @return int
+     */
+    public function getInitialUploadBatchSize()
+    {
+        return $this->get('initialUploadBatchSize');
+    }
+
+    /**
+     * Identifier for initial upload. Useful for differentiating between different shops or different language versions of one shop. Defaults to "semknox-upload".
+     * @return mixed|null
+     */
+    public function getInitialUploadDirectoryIdentifier()
+    {
+        return $this->get('initialUploadIdentifier', 'semknox-upload');
     }
 
     /**

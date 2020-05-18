@@ -1,17 +1,26 @@
 <?php
 
-require __DIR__ . '/_boot.php';
+use Semknox\Core\Services\InitialUpload\Status;
+
+require __DIR__ . '/_config.php';
 
 $jsonProducts = json_decode(file_get_contents('products.json'), true);
+//$jsonProducts = [];
 
 $sxCore = makeSxCore();
 $uploader = $sxCore->getInitialUploader();
+$uploadPhase = $uploader->getPhase();
 
-$uploader->init();
+if($uploadPhase == Status::PHASE_COLLECTING) {
+    foreach($jsonProducts as $product) {
+        $uploader->addProduct($product);
+    }
 
-
-foreach($jsonProducts as $product) {
-    $uploader->addProduct($product);
+    $uploader->start();
 }
-
-$uploader->start();
+else if($uploadPhase == Status::PHASE_UPLOADING) {
+    echo 'uploading';
+}
+else if($uploadPhase == Status::PHASE_COMPLETED) {
+    echo 'done';
+}

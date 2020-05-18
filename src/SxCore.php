@@ -14,8 +14,8 @@ class SxCore {
 
     public function __construct(SxConfig $config)
     {
-        if(PHP_VERSION < '5.5') {
-            throw new \Exception('PHP 5.5 or higher is required for this package');
+        if(PHP_VERSION < '5.6') {
+            throw new \Exception('PHP 5.6 or higher is required for this package');
         }
 
         $this->config = $config;

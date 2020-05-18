@@ -16,10 +16,10 @@ trait SingletonTrait
      *
      * @return self
      */
-    public static function getInstance(ApiClient $client, SxConfig $config=null)
+    public static function getInstance()
     {
         if(!self::$instance) {
-            self::$instance = new self($client, $config);
+            self::$instance = new self(...func_get_args());
         }
 
         return self::$instance;
