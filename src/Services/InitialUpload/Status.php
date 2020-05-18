@@ -84,6 +84,42 @@ class Status
     }
 
     /**
+     * Return if the curren tupload status is "collecting".
+     * @return bool
+     */
+    public function isCollecting()
+    {
+        return $this->getPhase() === self::PHASE_COLLECTING;
+    }
+
+    /**
+     * Return if the curren tupload status is "uploading".
+     * @return bool
+     */
+    public function isUploading()
+    {
+        return $this->getPhase() === Status::PHASE_UPLOADING;
+    }
+
+    /**
+     * Return if the curren tupload status is "completed".
+     * @return bool
+     */
+    public function isCompleted()
+    {
+        return $this->getPhase() === Status::PHASE_COMPLETED;
+    }
+
+    /**
+     * Return if the curren tupload status is "aborted".
+     * @return bool
+     */
+    public function isAborted()
+    {
+        return $this->getPhase() === Status::PHASE_ABORTED;
+    }
+
+    /**
      * Get the phase the upload is currently in. Can be
      *      self::STATUS_COLLECTING
      *      self::STATUS_UPLOADING

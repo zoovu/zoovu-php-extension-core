@@ -160,9 +160,6 @@ class ProductCollection {
     {
         $pattern = (string) $this->workingDirectory . '/upload-data_*.json';
 
-        var_dump('all files');
-        var_dump($pattern);
-
         return glob($pattern);
     }
 

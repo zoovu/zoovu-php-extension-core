@@ -1,12 +1,10 @@
 <?php namespace Semknox\Core\Services;
 
-use Semknox\Core\Exceptions\FilePermissionException;
 use Semknox\Core\Services\InitialUpload\ProductCollection;
 use Semknox\Core\Services\InitialUpload\Status;
 use Semknox\Core\Services\InitialUpload\WorkingDirectory;
 use Semknox\Core\Services\InitialUpload\WorkingDirectoryFactory;
 use Semknox\Core\SxConfig;
-use Semknox\Core\Services\Traits\SingletonTrait;
 
 
 /**
@@ -14,6 +12,11 @@ use Semknox\Core\Services\Traits\SingletonTrait;
  *
  *
  * @package Semknox\Core\Services
+ * @method bool isRunning()
+ * @method bool isCollecting()
+ * @method bool isUploading()
+ * @method bool isCompleted()
+ * @method bool isAborted
  */
 class InitialUploadService {
 
@@ -53,8 +56,6 @@ class InitialUploadService {
     private $productCollection;
 
 
-
-
     public function __construct(ApiClient $client, SxConfig $config)
     {
         $this->client = $client;
@@ -72,18 +73,6 @@ class InitialUploadService {
     }
 
     /**
-     * When the request is ended, permanent the products into the currently active file.
-     */
-    public function __destruct()
-    {
-        // permanent all products to file
-        $this->productCollection->writeToFile();
-
-        // write status from memory to file
-        $this->status->writeToFile();
-    }
-
-    /**
      * Initialize the InitialUploadService:
      *   - get the current upload status from the working directory
      *   - initialize the product collection
@@ -97,6 +86,28 @@ class InitialUploadService {
         ]);
     }
 
+
+    /**
+     * When the request is ended, permanent the products into the currently active file.
+     */
+    public function __destruct()
+    {
+        // permanent all products to file
+        $this->productCollection->writeToFile();
+
+        // write status from memory to file
+        $this->status->writeToFile();
+    }
+
+    /**
+     * Pass through status methods (isRunning())
+     */
+    public function __call($method, $args)
+    {
+        if(method_exists($this->status, $method)) {
+            return call_user_func_array([$this->status, $method], $args);
+        }
+    }
 
 
 
@@ -199,39 +210,5 @@ class InitialUploadService {
         // change phase in status
         $this->status->setPhase($newPhase);
         $this->status->writeToFile();
-    }
-
-    /**
-     * Get the current phase (collecting/uploading/completed/aborted)
-     * @return mixed
-     */
-    public function getPhase()
-    {
-        return $this->status->getPhase();
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function isCollecting()
-    {
-        return $this->getPhase() === Status::PHASE_COLLECTING;
-    }
-
-    public function isUploading()
-    {
-        return $this->getPhase() === Status::PHASE_UPLOADING;
-    }
-
-    public function isCompleted()
-    {
-        return $this->getPhase() === Status::PHASE_COMPLETED;
-    }
-
-    public function isAborted()
-    {
-        return $this->getPhase() === Status::PHASE_ABORTED;
     }
 }

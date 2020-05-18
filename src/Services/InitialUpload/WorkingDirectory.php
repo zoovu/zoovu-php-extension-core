@@ -2,10 +2,6 @@
 
 namespace Semknox\Core\Services\InitialUpload;
 
-
-use Semknox\Core\Exceptions\FilePermissionException;
-use Semknox\Core\SxConfig;
-
 class WorkingDirectory
 {
     /**
@@ -16,11 +12,21 @@ class WorkingDirectory
     /**
      * Initialize working directory for initial upload.
      *
-     * @param array $status Status information
+     * @param string $workingDirectoryPath
      */
-    public function __construct($workingDirectory)
+    public function __construct($workingDirectoryPath)
     {
-        $this->workingDirectoryPath = $workingDirectory;
+        $this->workingDirectoryPath = $workingDirectoryPath;
+    }
+
+    /**
+     * Remove working directory if no files have been written.
+     */
+    public function __destruct()
+    {
+        if(count(glob($this->workingDirectoryPath . "/*")) === 0) {
+            rmdir($this->workingDirectoryPath);
+        }
     }
 
     public function __toString()
@@ -42,7 +48,6 @@ class WorkingDirectory
      * Return the path to the latest working directory
      *
      * @return string
-     * @throws \Semknox\Core\Exceptions\ConfigurationException
      */
     private function getPath()
     {
@@ -55,7 +60,6 @@ class WorkingDirectory
      * @param $newDirectoryName
      *
      * @return bool
-     * @throws \Semknox\Core\Exceptions\ConfigurationException
      */
     public function rename($newDirectoryName)
     {

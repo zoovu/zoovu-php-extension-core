@@ -1,6 +1,7 @@
 <?php namespace Semknox\Core;
 
 use Semknox\Core\Services\ApiClient;
+use Semknox\Core\Services\InitialUploadOverviewService;
 use Semknox\Core\Services\InitialUploadService;
 use Semknox\Core\Services\SearchService;
 
@@ -31,6 +32,14 @@ class SxCore {
         $client = new ApiClient($this->config);
 
         return new InitialUploadService($client, $this->config);
+    }
+
+    /**
+     * Return a service that gives a bird-eye-view of all the currently running initial uploads.
+     */
+    public function getInitialUploadOverview()
+    {
+        return new InitialUploadOverviewService($this->config);
     }
 
     /**
