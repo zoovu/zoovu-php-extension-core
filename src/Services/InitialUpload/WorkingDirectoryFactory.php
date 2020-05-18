@@ -14,7 +14,7 @@ abstract class WorkingDirectoryFactory
      *
      * @return WorkingDirectory
      */
-    public static function getLatest($storagePath, $identifier='semknox-upload')
+    public static function getLatest($storagePath, $identifier='default-store')
     {
         $storagePath = rtrim($storagePath, '/');
 
@@ -40,7 +40,7 @@ abstract class WorkingDirectoryFactory
      * @throws FilePermissionException
      * @throws \Semknox\Core\Exceptions\ConfigurationException
      */
-    public static function createNew($storagePath, $identifier='semknox-upload')
+    public static function createNew($storagePath, $identifier='default-store')
     {
         $directory = self::getNextWorkingDirectoryPath($storagePath, $identifier);
 

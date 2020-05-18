@@ -69,12 +69,12 @@ class SxConfig {
     }
 
     /**
-     * Identifier for initial upload. Useful for differentiating between different shops or different language versions of one shop. Defaults to "semknox-upload".
+     * Identifier for initial upload. Useful for differentiating between different shops or different language versions of one shop. Defaults to "default-store".
      * @return mixed|null
      */
     public function getInitialUploadDirectoryIdentifier()
     {
-        return $this->get('initialUploadIdentifier', 'semknox-upload');
+        return $this->get('initialUploadIdentifier', 'default-store');
     }
 
     /**

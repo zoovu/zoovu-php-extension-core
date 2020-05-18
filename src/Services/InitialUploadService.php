@@ -150,7 +150,7 @@ class InitialUploadService {
         // add product to collection
         $this->productCollection->add($product);
 
-        $this->status->addCollected();
+        $this->status->increaseNumberOfCollected();
     }
 
     /**
@@ -179,7 +179,7 @@ class InitialUploadService {
 
             $this->client->request('POST', 'products/batch/upload');
 
-            $this->status->addUploaded(count($products));
+            $this->status->increaseNumberOfUploaded(count($products));
             $this->status->writeToFile();
         }
 

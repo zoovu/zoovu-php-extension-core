@@ -148,14 +148,35 @@ class Status
         $this->data['phase'] = $phase;
     }
 
-    public function addCollected($numCollected=1)
+    /**
+     * Increase number of collected products by $numCollected.
+     * @param int $numCollected
+     *
+     * @return $this
+     */
+    public function increaseNumberOfCollected($numCollected=1)
     {
         $this->data['collected'] += $numCollected;
 
         return $this;
     }
 
-    public function addUploaded($numUploaded=1)
+    /**
+     * Get the amount of already collected products.
+     * @return mixed
+     */
+    public function getNumberOfCollected()
+    {
+        return $this->data['collected'];
+    }
+
+    /**
+     * Increase number of uploaded products by $numUploaded.
+     * @param int $numUploaded
+     *
+     * @return $this
+     */
+    public function increaseNumberOfUploaded($numUploaded=1)
     {
         $this->data['collected'] += $numUploaded;
 
