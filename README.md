@@ -22,7 +22,7 @@ $configValues = [
     'productTransformer' => MagentoSemknoxProductTransformer::class,
     'storagePath'        => '/path/to/writable/directory',
     'initialUploadBatchSize' => 200,
-    'initialUploadDirectoryIdentifier' => 'semknox-upload',
+    'initialUploadIdentifier' => 'semknox-upload',
     'requestTimeout' => 15
 ];
 
