@@ -50,6 +50,7 @@ $uploader->startCollecting();
 // an instance of you shop systems product model to ->addProduct(). 
 foreach($products as $product) {
     // transforms a product and adds it to the initial upload
+    // you can optionally pass additional parameters as second argument
     $uploader->addProduct($product);
 }
 
@@ -73,19 +74,21 @@ class MagentoSemknoxProductTransformer extends AbstractProductTransformer {
 
     private $product;
 
-    public function __construct(Mage_Catalog_Model_Product $product)
+    public function __construct(\My\Shop\Product $product)
     {
         $this->product = $product;
     }   
 
     /**
-     * Transform a Mage_Catalog_Model_Product to a Semknox compatible format.
+     * Transform a \My\Shop\Product to a Semknox compatible format.
+     * @param array $parameters Optional parameters to give 
      * @return array
      */
-    public function transform() {
+    public function transform($parameters=[]) {
         return [
             'identifier' => $this->product->getId(),
-            'title' => $this->product->getTitle()
+            'groupIdentifier' => $this->product->getCategoryId(),
+            'name' => $this->product->getTitle()
         ];        
     } 
 }
