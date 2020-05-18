@@ -9,18 +9,19 @@ $jsonProducts = json_decode(file_get_contents('products.json'), true);
 
 $sxCore = makeSxCore();
 $uploader = $sxCore->getInitialUploader();
-$uploadPhase = $uploader->getPhase();
 
-if($uploadPhase == Status::PHASE_COLLECTING) {
+
+
+if($uploader->isCollecting()) {
     foreach($jsonProducts as $product) {
         $uploader->addProduct($product);
     }
 
     $uploader->startUploading();
 }
-else if($uploadPhase == Status::PHASE_UPLOADING) {
+else if($uploader->isUploading()) {
     echo 'uploading';
 }
-else if($uploadPhase == Status::PHASE_COMPLETED) {
+else if($uploader->isCompleted()) {
     echo 'done';
 }

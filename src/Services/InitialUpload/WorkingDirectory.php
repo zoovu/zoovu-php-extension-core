@@ -9,30 +9,23 @@ use Semknox\Core\SxConfig;
 class WorkingDirectory
 {
     /**
-     * @var SxConfig
-     */
-    protected $config;
-
-    /**
      * @var string
      */
-    protected $workingDirectory;
+    protected $workingDirectoryPath;
 
     /**
      * Initialize working directory for initial upload.
      *
      * @param array $status Status information
      */
-    public function __construct(SxConfig $config)
+    public function __construct($workingDirectory)
     {
-        $this->config = $config;
-
-        $this->workingDirectory = $this->getWorkingDirectory();
+        $this->workingDirectoryPath = $workingDirectory;
     }
 
     public function __toString()
     {
-        return $this->workingDirectory ?: '';
+        return $this->workingDirectoryPath ?: '';
     }
 
     /**
@@ -41,9 +34,8 @@ class WorkingDirectory
      */
     public function __invoke($path)
     {
-        return $this->workingDirectory . '/' . $path;
+        return $this->workingDirectoryPath . '/' . $path;
     }
-
 
 
     /**
@@ -52,77 +44,11 @@ class WorkingDirectory
      * @return string
      * @throws \Semknox\Core\Exceptions\ConfigurationException
      */
-    private function getWorkingDirectory()
+    private function getPath()
     {
-        if($this->workingDirectory) {
-            return $this->workingDirectory;
-        }
-
-        $workingDirectory = $this->getLatestDirectory();
-
-        return $workingDirectory ?: $this->getNextWorkingDirectoryName();
+        return $this->workingDirectoryPath;
     }
 
-    /**
-     * Return the path to the latest working directory or null, if none has been created yet.
-     * @throws \Semknox\Core\Exceptions\ConfigurationException
-     * @return
-     */
-    public function getLatestDirectory()
-    {
-        $storagePath = rtrim($this->config->getStoragePath(), '/');
-
-        $identifier = $this->config->getInitialUploadDirectoryIdentifier();
-
-        $directories = "$storagePath/$identifier-*";
-
-        // get latest working directory
-        $directories = glob($directories, GLOB_ONLYDIR);
-
-        // because glob orders alphabetically, the latest directory is the last one in $directories
-        return count($directories) ? end($directories) : null;
-    }
-
-    /**
-     * Create a new directory called "semknox-upload-<time>" in $config->getStoragePath().
-     * If configuration value 'initialUploadIdentifier' has been set "semknox-upload" is replaces with the identifier.
-     *
-     * @return self
-     * @throws FilePermissionException
-     * @throws \Semknox\Core\Exceptions\ConfigurationException
-     */
-    public function createNew()
-    {
-        $directory = $this->getNextWorkingDirectoryName();
-
-        if(!is_writable(dirname($directory))) {
-            throw new FilePermissionException('Can not create a new directory for initial upload');
-        }
-
-        if(!is_dir($directory)) {
-            mkdir($directory);
-        }
-
-        $this->workingDirectory = $directory;
-
-        return $this;
-    }
-
-    /**
-     * Return the name of what would be the next working directory.
-     * @return string
-     * @throws \Semknox\Core\Exceptions\ConfigurationException
-     */
-    private function getNextWorkingDirectoryName()
-    {
-        $storagePath = rtrim($this->config->getStoragePath(), '/');
-
-        $identifier = $this->config->getInitialUploadDirectoryIdentifier();
-
-        $time = date('YmdHis');
-
-        return "$storagePath/$identifier-$time." . Status::PHASE_COLLECTING;
-    }
 
     /**
      * Rename the current working directory.
@@ -133,7 +59,7 @@ class WorkingDirectory
      */
     public function rename($newDirectoryName)
     {
-        $directory = $this->getWorkingDirectory();
+        $directory = $this->getPath();
 
         $newDirectoryName = dirname($directory)
                             . '/'
@@ -142,7 +68,7 @@ class WorkingDirectory
         $status = rename($directory, $newDirectoryName);
 
         if($status) {
-            $this->workingDirectory = $newDirectoryName;
+            $this->workingDirectoryPath = $newDirectoryName;
         }
 
         return $status;
@@ -154,7 +80,7 @@ class WorkingDirectory
      */
     public function renamePhase($newPhase)
     {
-        $directoryName = (string) basename($this->getWorkingDirectory());
+        $directoryName = (string) basename($this->getPath());
 
         $currentPhase = strrchr($directoryName, '.');
         $newName = str_replace($currentPhase, '.' . $newPhase, $directoryName);

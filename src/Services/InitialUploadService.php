@@ -4,6 +4,7 @@ use Semknox\Core\Exceptions\FilePermissionException;
 use Semknox\Core\Services\InitialUpload\ProductCollection;
 use Semknox\Core\Services\InitialUpload\Status;
 use Semknox\Core\Services\InitialUpload\WorkingDirectory;
+use Semknox\Core\Services\InitialUpload\WorkingDirectoryFactory;
 use Semknox\Core\SxConfig;
 use Semknox\Core\Services\Traits\SingletonTrait;
 
@@ -51,12 +52,6 @@ class InitialUploadService {
      */
     private $productCollection;
 
-    /**
-     * The maximum amount of products to be collected before they are written
-     * into a file.
-     * @var int
-     */
-    private $productCollectionMaxSize = 200;
 
 
 
@@ -66,7 +61,12 @@ class InitialUploadService {
 
         $this->config = $config;
 
-        $this->workingDirectory = new WorkingDirectory($this->config);
+        $this->workingDirectory = WorkingDirectoryFactory::getLatest(
+            $config->getStoragePath(),
+            $config->getInitialUploadDirectoryIdentifier()
+        );
+
+        $this->transformerClass = $this->config->getProductTransformer();
 
         $this->init();
     }
@@ -79,19 +79,17 @@ class InitialUploadService {
         // permanent all products to file
         $this->productCollection->writeToFile();
 
+        // write status from memory to file
         $this->status->writeToFile();
     }
 
     /**
      * Initialize the InitialUploadService:
-     *   - find the directory this initial upload is working in
-     *   - get the current upload status
-     *   - intialize product collection
+     *   - get the current upload status from the working directory
+     *   - initialize the product collection
      */
     private function init()
     {
-        $this->transformerClass = $this->config->getProductTransformer();
-
         $this->status = new Status($this->workingDirectory);
 
         $this->productCollection = new ProductCollection($this->workingDirectory, [
@@ -109,7 +107,10 @@ class InitialUploadService {
      */
     public function startCollecting($config = [])
     {
-        $this->workingDirectory = $this->workingDirectory->createNew();
+        $this->workingDirectory = WorkingDirectoryFactory::createNew(
+            $this->config->getStoragePath(),
+            $this->config->getInitialUploadDirectoryIdentifier()
+        );
 
         $this->init();
     }
@@ -167,8 +168,6 @@ class InitialUploadService {
 
             $this->client->request('POST', 'products/batch/upload');
 
-            var_dump($file);echo '<br><br>';
-
             $this->status->addUploaded(count($products));
             $this->status->writeToFile();
         }
@@ -214,5 +213,25 @@ class InitialUploadService {
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function isCollecting()
+    {
+        return $this->getPhase() === Status::PHASE_COLLECTING;
+    }
+
+    public function isUploading()
+    {
+        return $this->getPhase() === Status::PHASE_UPLOADING;
+    }
+
+    public function isCompleted()
+    {
+        return $this->getPhase() === Status::PHASE_COMPLETED;
+    }
+
+    public function isAborted()
+    {
+        return $this->getPhase() === Status::PHASE_ABORTED;
     }
 }
