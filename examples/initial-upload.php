@@ -11,6 +11,8 @@ $sxCore = makeSxCore();
 $uploader = $sxCore->getInitialUploader();
 $uploadPhase = $uploader->getPhase();
 
+if($uploader->startCollecting());
+
 if($uploadPhase == Status::PHASE_COLLECTING) {
     foreach($jsonProducts as $product) {
         $uploader->addProduct($product);

@@ -109,9 +109,9 @@ class InitialUploadService {
      */
     public function startCollecting($config = [])
     {
-        $directory = $this->workingDirectory->nextWorkingDirectoryName();
+        $directory = $this->workingDirectory->createNew();
 
-        $this->createNextProductsFile();
+        $this->productCollection->createNextProductsFile();
 
         // put initial status file in directory
         file_put_contents($directory . 'info.json', $this->getInfoFileContent());

@@ -111,7 +111,7 @@ class WorkingDirectory
      * @return string
      * @throws \Semknox\Core\Exceptions\ConfigurationException
      */
-    private function getNextWorkingDirectoryName()
+    public function getNextWorkingDirectoryName()
     {
         $storagePath = rtrim($this->config->getStoragePath(), '/');
 
