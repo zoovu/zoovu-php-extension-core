@@ -16,7 +16,15 @@ class SxConfig {
     }
 
 
-    private function get($key, $default=null)
+    /**
+     * Get a value from the configuration.
+     *
+     * @param $key
+     * @param null $default
+     *
+     * @return mixed|null
+     */
+    public function get($key, $default=null)
     {
         return isset($this->config[$key])
             ? $this->config[$key]
