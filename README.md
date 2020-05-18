@@ -19,7 +19,7 @@ $configValues = [
     
     // optional options
     'apiUrl' => 'https://dev-api-v3.semknox.com/',
-    'productTransformer' => MagentoSemknoxProductTransformer::class,
+    'productTransformer' => \My\Shop\Semknox\ProductTransformer::class,
     'storagePath'        => '/path/to/writable/directory',
     'initialUploadBatchSize' => 200,
     'initialUploadIdentifier' => 'default-store',
@@ -44,10 +44,10 @@ $uploader = $sxCore->getInitialUploader();
 // it has additional configuration parameters. See the implementation for details. 
 $uploader->startCollecting();
 
-// collect products from your shop system. $products is an array of your products
-// as an array that contains the required semknox information.
-// Alternatively when you set the `productTransformer` configuration, you can pass
-// an instance of you shop systems product model to ->addProduct(). 
+// collect products from your shop system. $products is an array of your products.
+// Each item of the array can be:
+//      1) an associative array in Semknox compatible format
+//   or 2) an instance of your shop systems product model, IF you have set the `productTransformer` configuration to a valid product transformer 
 foreach($products as $product) {
     // transforms a product and adds it to the initial upload
     // you can optionally pass additional parameters as second argument
