@@ -107,7 +107,7 @@ class InitialUploadService {
      * Config (todo):
      *  - expectedNumberOfProducts     (how many products we're expecting in total, helps with status report)
      */
-    public function addNew($config = [])
+    public function startCollecting($config = [])
     {
         $directory = $this->workingDirectory->nextWorkingDirectoryName();
 
@@ -124,7 +124,7 @@ class InitialUploadService {
     public function addProduct($product, $parameters=[])
     {
         if($this->getPhase() == ($this->status)::PHASE_COMPLETED) {
-            $this->addNew();
+            $this->startCollecting();
         }
         else if($this->getPhase() == ($this->status)::PHASE_UPLOADING) {
             throw new \RuntimeException('Can not add products to current initial upload, because upload is already in progress.');
@@ -148,7 +148,7 @@ class InitialUploadService {
      * Start uploading all collected products to Semknox.
      * This goes
      */
-    public function start()
+    public function startUploading()
     {
         $currentPhase = $this->getPhase();
 

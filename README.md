@@ -42,7 +42,7 @@ $uploader = $sxCore->getInitialUploader();
 
 // this method signals the beginning of a new initial product upload
 // it has additional configuration parameters. See the implementation for details. 
-$uploader->addNew();
+$uploader->startCollecting();
 
 // collect products from your shop system. $products is an array of your products
 // as an array that contains the required semknox information.
@@ -54,7 +54,7 @@ foreach($products as $product) {
 }
 
 // when all products were collected: start uploading all collected products 
-$uploader->start();
+$uploader->startUploading();
   
 ~~~
 

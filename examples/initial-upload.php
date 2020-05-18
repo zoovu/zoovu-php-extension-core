@@ -16,7 +16,7 @@ if($uploadPhase == Status::PHASE_COLLECTING) {
         $uploader->addProduct($product);
     }
 
-    $uploader->start();
+    $uploader->startUploading();
 }
 else if($uploadPhase == Status::PHASE_UPLOADING) {
     echo 'uploading';
