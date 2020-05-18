@@ -163,7 +163,7 @@ class Status
 
     /**
      * Get the amount of already collected products.
-     * @return mixed
+     * @return int
      */
     public function getNumberOfCollected()
     {
@@ -181,6 +181,15 @@ class Status
         $this->data['collected'] += $numUploaded;
 
         return $this;
+    }
+
+    /**
+     * Return number of already uploaded products.
+     * @return int
+     */
+    public function getNumberOfUploaded()
+    {
+        return $this->data['uploaded'];
     }
 
     public function writeToFile()
