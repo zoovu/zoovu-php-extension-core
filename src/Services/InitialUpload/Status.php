@@ -84,7 +84,7 @@ class Status
     }
 
     /**
-     * Return if the curren tupload status is "collecting".
+     * Return if the current upload status is "collecting".
      * @return bool
      */
     public function isCollecting()
@@ -93,7 +93,7 @@ class Status
     }
 
     /**
-     * Return if the curren tupload status is "uploading".
+     * Return if the current upload status is "uploading".
      * @return bool
      */
     public function isUploading()
@@ -102,7 +102,7 @@ class Status
     }
 
     /**
-     * Return if the curren tupload status is "completed".
+     * Return if the current upload status is "completed".
      * @return bool
      */
     public function isCompleted()
@@ -111,7 +111,7 @@ class Status
     }
 
     /**
-     * Return if the curren tupload status is "aborted".
+     * Return if the current upload status is "aborted".
      * @return bool
      */
     public function isAborted()
