@@ -12,6 +12,7 @@ use Semknox\Core\SxConfig;
  *
  * @package Semknox\Core\Services
  * @method bool isRunning()
+ * @method bool isStopped()
  * @method bool isCollecting()
  * @method bool isUploading()
  * @method bool isCompleted()
@@ -116,6 +117,10 @@ class InitialUploadService {
      */
     public function startCollecting($config = [])
     {
+        if($this->isRunning()) {
+            throw new \RuntimeException('Initial upload is already running. Can not start a new initial upload. Please wait for the previous upload to complete or abort the upload first.');
+        }
+
         $this->workingDirectory = WorkingDirectoryFactory::createNew(
             $this->config->getStoragePath(),
             $this->config->getInitialUploadDirectoryIdentifier()
