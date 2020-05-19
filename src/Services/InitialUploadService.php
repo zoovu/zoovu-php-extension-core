@@ -10,13 +10,13 @@ use Semknox\Core\SxConfig;
 /**
  * Class InitialUploadService. Handles collecting of products and upload to Semknox.
  *
- *
  * @package Semknox\Core\Services
  * @method bool isRunning()
  * @method bool isCollecting()
  * @method bool isUploading()
  * @method bool isCompleted()
- * @method bool isAborted
+ * @method bool isAborted()
+ * @method string getPhase()
  */
 class InitialUploadService {
 
@@ -109,8 +109,6 @@ class InitialUploadService {
         }
     }
 
-
-
     /**
      * Start a new initial upload. This creates a directory to collect all products to be sent to Semknox.
      * Config (todo):
@@ -124,6 +122,8 @@ class InitialUploadService {
         );
 
         $this->init();
+
+        $this->status->writeToFile();
     }
 
     /**
@@ -132,11 +132,8 @@ class InitialUploadService {
      */
     public function addProduct($product, $parameters=[])
     {
-        if($this->getPhase() == ($this->status)::PHASE_COMPLETED) {
-            $this->startCollecting();
-        }
-        else if($this->getPhase() == ($this->status)::PHASE_UPLOADING) {
-            throw new \RuntimeException('Can not add products to current initial upload, because upload is already in progress.');
+        if($this->getPhase() !== Status::PHASE_COLLECTING) {
+            throw new \RuntimeException('Can not add products because current initial upload is not in phase "collecting".');
         }
 
         if($this->transformerClass) {
@@ -162,7 +159,7 @@ class InitialUploadService {
         $currentPhase = $this->getPhase();
 
         if($currentPhase !== ($this->status)::PHASE_COLLECTING) {
-            return;
+            throw new \RuntimeException('Can not startUploading because current upload is not in phase "collecting"');
         }
 
         $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
@@ -204,7 +201,7 @@ class InitialUploadService {
         $this->productCollection->writeToFile();
         $this->productCollection->clear();
 
-        // change name of working directory from .COLLECTING to .UPLOADING
+        // change name of working directory e.g. from .COLLECTING to .UPLOADING
         $this->workingDirectory->renamePhase($newPhase);
 
         // change phase in status

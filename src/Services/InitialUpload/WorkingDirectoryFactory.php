@@ -28,7 +28,7 @@ abstract class WorkingDirectoryFactory
 
         return $latestDirectory
             ? new WorkingDirectory($latestDirectory)
-            : self::createNew($storagePath, $identifier);
+            : new WorkingDirectory(self::getNextWorkingDirectoryPath($storagePath, $identifier));
     }
 
     /**

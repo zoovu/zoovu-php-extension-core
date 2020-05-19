@@ -46,13 +46,17 @@ class Status
     }
 
     /**
-     * Return the default status. This is useful e.g. if the upload has not started yet.
+     * Return the default status. This is used when no upload has been started yet.
      * @return array
      */
     public function getDefaultStatus()
     {
+        $phase = is_dir($this->workingDirectory->getPath())
+            ? self::PHASE_COLLECTING
+            : self::PHASE_COMPLETED; // has status completed when no upload exists yet.
+
         return [
-            'phase' => self::PHASE_COLLECTING,
+            'phase' => $phase,
             'startTime' => date('Y-m-d H:i:s'),
             'duration'  => 0,
             'collected' => 0,
@@ -194,14 +198,12 @@ class Status
 
     public function writeToFile()
     {
-        if($this->data !== $this->getDefaultStatus()) {
-            $workingDirectory = $this->workingDirectory;
+        $workingDirectory = $this->workingDirectory;
 
-            $file = $workingDirectory($this->statusFileName);
+        $file = $workingDirectory($this->statusFileName);
 
-            $content = json_encode($this->data);
+        $content = json_encode($this->data);
 
-            file_put_contents($file, $content);
-        }
+        file_put_contents($file, $content);
     }
 }

@@ -19,16 +19,6 @@ class WorkingDirectory
         $this->workingDirectoryPath = $workingDirectoryPath;
     }
 
-    /**
-     * Remove working directory if no files have been written.
-     */
-    public function __destruct()
-    {
-        if(count(glob($this->workingDirectoryPath . "/*")) === 0) {
-            rmdir($this->workingDirectoryPath);
-        }
-    }
-
     public function __toString()
     {
         return $this->workingDirectoryPath ?: '';
@@ -49,7 +39,7 @@ class WorkingDirectory
      *
      * @return string
      */
-    private function getPath()
+    public function getPath()
     {
         return $this->workingDirectoryPath;
     }

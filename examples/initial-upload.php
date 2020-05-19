@@ -10,6 +10,9 @@ $jsonProducts = json_decode(file_get_contents('products.json'), true);
 $sxCore = makeSxCore();
 $uploader = $sxCore->getInitialUploader();
 
+if($uploader->isStopped()) {
+    $uploader->startCollecting();
+}
 
 if($uploader->isCollecting()) {
     foreach($jsonProducts as $product) {
@@ -20,7 +23,4 @@ if($uploader->isCollecting()) {
 }
 else if($uploader->isUploading()) {
     echo 'uploading';
-}
-else if($uploader->isCompleted()) {
-    echo 'done';
 }
