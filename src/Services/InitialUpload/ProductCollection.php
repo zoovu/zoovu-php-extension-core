@@ -141,6 +141,8 @@ class ProductCollection {
      */
     public function add(array $product)
     {
+        $product = $this->enforceStringValues($product);
+
         $this->productCollection[] = $product;
 
         if(count($this->productCollection) >= $this->productCollectionMaxSize) {
@@ -150,6 +152,22 @@ class ProductCollection {
 
             $this->clear();
         }
+    }
+
+    /**
+     * Cast all numeric values to strings, because Semknox API requires String values instead of numeric JSON values.
+     * @param array $product
+     * @return array
+     */
+    private function enforceStringValues(array $product)
+    {
+        array_walk_recursive($product, function(&$item, $key) {
+            if(is_numeric($item)) {
+                $item = (string) $item;
+            }
+        });
+
+        return $product;
     }
 
     /**
