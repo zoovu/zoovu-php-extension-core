@@ -10,17 +10,28 @@ $jsonProducts = json_decode(file_get_contents('products.json'), true);
 $sxCore = makeSxCore();
 $uploader = $sxCore->getInitialUploader();
 
+// start a new upload (start collecting products)
 if($uploader->isStopped()) {
     $uploader->startCollecting();
 }
 
+// while it is collecting products add products
 if($uploader->isCollecting()) {
     foreach($jsonProducts as $product) {
         $uploader->addProduct($product);
     }
 
+    // start upload when done collecting
     $uploader->startUploading();
 }
-else if($uploader->isUploading()) {
+
+// while uploading trigger to send a product batch
+if($uploader->isUploading()) {
     echo 'uploading';
+
+    $numUploaded = $uploader->sendUploadBatch();
+
+    if($numUploaded === 0) {
+        $uploader->finalizeUpload();
+    }
 }

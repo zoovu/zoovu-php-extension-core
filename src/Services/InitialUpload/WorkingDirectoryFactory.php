@@ -42,6 +42,12 @@ abstract class WorkingDirectoryFactory
      */
     public static function createNew($storagePath, $identifier='default-store')
     {
+        if(!file_exists($storagePath)) {
+            if(!mkdir($storagePath)) {
+                throw new FilePermissionException('Storage path does not exist and can not be created.');
+            }
+        }
+
         $directory = self::getNextWorkingDirectoryPath($storagePath, $identifier);
 
         if(!is_writable(dirname($directory))) {

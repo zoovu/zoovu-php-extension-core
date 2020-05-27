@@ -54,9 +54,15 @@ foreach($products as $product) {
     $uploader->addProduct($product);
 }
 
-// when all products were collected: start uploading all collected products 
+// when all products were collected: signalize that product upload is starting now 
 $uploader->startUploading();
-  
+
+// upload batches until no products are left to be uploaded
+while($uploader->sendUploadBatch()) ;
+
+// all products have been uploaded: tell Semknox to start processing
+// and complete the upload.
+$uploader->finalizeUpload();
 ~~~
 
 
@@ -66,11 +72,11 @@ Each online shop software stores its products a little different. To generate a 
 That class needs a `__construct` method and `transform` method. 
 
 ```php
-<?php
+<?php namespace \My\Shop\Semknox;
 
 use Semknox\Core\Transformer\AbstractProductTransformer;
 
-class MagentoSemknoxProductTransformer extends AbstractProductTransformer {
+class ProductTransformer extends AbstractProductTransformer {
 
     private $product;
 
@@ -93,6 +99,28 @@ class MagentoSemknoxProductTransformer extends AbstractProductTransformer {
     } 
 }
 ```
+ 
+### Initial upload status reporting 
+
+When specified how many products are expected to be uploaded, the InitialUploader can return useful metrics for the current progress of the upload.
+
+
+~~~php
+// ...
+$uploader = $sxCore->getInitialUploader();
+$uploader->startCollecting([
+    'expectedNumberOfProducts' => 7384
+]);
+
+echo $uploader->getCollectingProgress(); // return 0 (because 0% of 7384 products have been collected)
+
+echo $uploader->getUploadingProgress(); // returns how much percent of products have been uploaded
+
+echo $uploader->getTotalProgress(); // returns total progress (collecting is 90%, uploading 10%)
+
+echo $uploader->getRemainingTime(); // returns the expected remaining upload time in seconds
+~~~
+
  
 ## Product search
 

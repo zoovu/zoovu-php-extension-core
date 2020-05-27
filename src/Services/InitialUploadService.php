@@ -18,6 +18,12 @@ use Semknox\Core\SxConfig;
  * @method bool isCompleted()
  * @method bool isAborted()
  * @method string getPhase()
+ * @method int getNumberOfCollected()
+ * @method int getCollectingProgress()
+ * @method int getNumberOfUploaded()
+ * @method int getUploadingProgress()
+ * @method int getTotalProgress()
+ * @method int getRemainingDuration()
  */
 class InitialUploadService {
 
@@ -78,9 +84,9 @@ class InitialUploadService {
      *   - get the current upload status from the working directory
      *   - initialize the product collection
      */
-    private function init()
+    private function init($initialUploadConfig)
     {
-        $this->status = new Status($this->workingDirectory);
+        $this->status = new Status($this->workingDirectory, $initialUploadConfig);
 
         $this->productCollection = new ProductCollection($this->workingDirectory, [
             'maxSize' => $this->config->getInitialUploadBatchSize()
@@ -113,7 +119,7 @@ class InitialUploadService {
     /**
      * Start a new initial upload. This creates a directory to collect all products to be sent to Semknox.
      * Config (todo):
-     *  - expectedNumberOfProducts     (how many products we're expecting in total, helps with status report)
+     *  - expectedNumberOfProducts     (how many products we're expecting in total. If set we can get the progress in  helps with status report)
      */
     public function startCollecting($config = [])
     {
@@ -126,7 +132,7 @@ class InitialUploadService {
             $this->config->getInitialUploadDirectoryIdentifier()
         );
 
-        $this->init();
+        $this->init($config);
 
         $this->status->writeToFile();
     }
@@ -156,8 +162,7 @@ class InitialUploadService {
     }
 
     /**
-     * Start uploading all collected products to Semknox.
-     * This goes
+     * Starts the initial upload progress. This method tells Semknox, that from now all products will be transmitted in batches using the method `sendUploadBatch()`.
      */
     public function startUploading()
     {
@@ -172,19 +177,53 @@ class InitialUploadService {
         // signalise start of inital product upload
         $this->client->request('POST', 'products/batch/initiate');
 
-        // start upload of batches
-        foreach($this->productCollection->allFiles() as $file) {
-            $products = file_get_contents($file);
-            $products = json_decode($products, true);
 
-            $this->client->setParam('products', $products);
+        // ..
+        // upload products
+        // ..
 
-            $this->client->request('POST', 'products/batch/upload');
 
-            $this->status->increaseNumberOfUploaded(count($products));
-            $this->status->writeToFile();
+
+    }
+
+    /**
+     * Send a single product batch to semknox for processing. Returns the the number of products uploaded in this batch.
+     * @return int The number of products sent in this batch.
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendUploadBatch()
+    {
+        $file = $this->productCollection->nextFileToUpload();
+        if(!$file) {
+            return 0;
         }
 
+        // start upload of batches
+        $products = file_get_contents($file);
+        $products = json_decode($products, true);
+
+        $this->client->setParam('products', $products);
+
+        $this->client->request('POST', 'products/batch/upload');
+
+        $numberOfProducts = count($products);
+
+        $this->status->increaseNumberOfUploaded($numberOfProducts);
+        $this->status->writeToFile();
+
+        // rename file to .completed.
+        // Todo: this should not be done by this service
+        rename($file, str_replace('.json', '.completed.json', $file));
+
+        return $numberOfProducts;
+    }
+
+    /**
+     * Signalizes Semknox that all product batches have been uploaded and sets status of this upload to "COMPLETED".
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function finalizeUpload()
+    {
         // when done change signal Semknox to start processing...
         $this->client->request('POST', 'products/batch/start');
 

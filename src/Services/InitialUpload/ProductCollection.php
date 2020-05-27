@@ -136,7 +136,7 @@ class ProductCollection {
 
 
     /**
-     * Add a product to the collecting. If enough products have been collected automatically stores them to file and starts the next product file.
+     * Add a product to the collection. If enough products have been collected: automatically store them to file and starts the next product file.
      * @param array $product
      */
     public function add(array $product)
@@ -179,6 +179,35 @@ class ProductCollection {
         $pattern = (string) $this->workingDirectory . '/upload-data_*.json';
 
         return glob($pattern);
+    }
+
+    /**
+     * Return all product files that still have to be uploaded.
+     * Retu
+     */
+    public function filesToUpload()
+    {
+        $allFiles = $this->allFiles();
+
+        if(!$allFiles) {
+            return $allFiles;
+        }
+
+        // remove all elements that end in .completed.json
+        return array_filter($allFiles, function($path) {
+            return (strpos($path, '.completed.json') === false);
+        });
+    }
+
+    /**
+     * Return the next file to upload or false if no more file has to be uploaded.
+     * @return string|false
+     */
+    public function nextFileToUpload()
+    {
+        $allFiles = $this->filesToUpload();
+
+        return reset($allFiles);
     }
 
     /**

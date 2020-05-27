@@ -15,8 +15,15 @@ class Status
 
     private $statusFileName = 'info.json';
 
+    /**
+     * @var WorkingDirectory
+     */
     protected $workingDirectory;
 
+    /**
+     * Status data, like number of collected products.
+     * @var array
+     */
     protected $data;
 
     /**
@@ -24,7 +31,7 @@ class Status
      *
      * @param array $status Status information
      */
-    public function __construct(WorkingDirectory &$workingDirectory)
+    public function __construct(WorkingDirectory &$workingDirectory, array $config)
     {
         $this->workingDirectory = $workingDirectory;
 
@@ -36,7 +43,7 @@ class Status
             $this->data = json_decode($content, true);
         }
         else {
-            $this->data = $this->getDefaultStatus();
+            $this->data = $this->getDefaultStatus($config);
         }
     }
 
@@ -47,20 +54,26 @@ class Status
 
     /**
      * Return the default status. This is used when no upload has been started yet.
+     * @param array $config
      * @return array
      */
-    public function getDefaultStatus()
+    public function getDefaultStatus($config=array())
     {
         $phase = is_dir($this->workingDirectory->getPath())
             ? self::PHASE_COLLECTING
             : self::PHASE_COMPLETED; // has status completed when no upload exists yet.
+
+        $expectedNumberOfProducts = isset($config['expectedNumberOfProducts'])
+            ? $config['expectedNumberOfProducts']
+            : 0;
 
         return [
             'phase' => $phase,
             'startTime' => date('Y-m-d H:i:s'),
             'duration'  => 0,
             'collected' => 0,
-            'uploaded'  => 0
+            'uploaded'  => 0,
+            'expectedNumberOfProducts' => $expectedNumberOfProducts
         ];
     }
 
@@ -175,6 +188,19 @@ class Status
     }
 
     /**
+     * Get the the current progress of collecting products in percent (%).
+     * @return int
+     */
+    public function getCollectingProgress()
+    {
+        $expected = $this->data['expectedNumberOfProducts'];
+
+        return $expected
+            ? round(($this->data['collected'] / $expected) * 100)
+            : 0;
+    }
+
+    /**
      * Increase number of uploaded products by $numUploaded.
      * @param int $numUploaded
      *
@@ -196,6 +222,44 @@ class Status
         return $this->data['uploaded'];
     }
 
+    /**
+     * Get the the current progress of uploading products in percent (%).
+     * @return int
+     */
+    public function getUploadingProgress()
+    {
+        $expected = $this->data['expectedNumberOfProducts'];
+
+        return $expected
+            ? round(($this->data['uploaded'] / $expected) * 100)
+            : 0;
+    }
+
+    /**
+     * Return the total progress of this upload.
+     */
+    public function getTotalProgress()
+    {
+        $phase = $this->getPhase();
+
+        switch($phase) {
+            // collecting is the first 90% of the upload
+            case self::PHASE_COLLECTING:
+                return round($this->getCollectingProgress() * 0.9);
+                break;
+            // uploading is the remaining 10% of the upload
+            case self::PHASE_UPLOADING:
+                return round(90 + ($this->getUploadingProgress() * 0.1));
+                break;
+            // aborted or completed should be 100%
+            default:
+                return 100;
+        }
+    }
+
+    /**
+     * Persist current status on file system.
+     */
     public function writeToFile()
     {
         $workingDirectory = $this->workingDirectory;

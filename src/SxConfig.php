@@ -15,7 +15,6 @@ class SxConfig {
         $this->config = $config;
     }
 
-
     /**
      * Get a value from the configuration.
      *
@@ -29,6 +28,32 @@ class SxConfig {
         return isset($this->config[$key])
             ? $this->config[$key]
             : $default;
+    }
+
+    /**
+     * Set a configuration value.
+     *
+     * @param string $key
+     * @param $value
+     */
+    public function set(string $key, $value)
+    {
+       $this->config[$key] = $value;
+    }
+
+    /**
+     * Merge configuration data with the current config.
+     *
+     * @param array $data The data to merge
+     * @param array $whitelist An array of allowed $data keys.
+     */
+    public function merge(array $data, array $whitelist=[])
+    {
+        if($whitelist) {
+            $data = array_intersect_key($data, array_flip($whitelist));
+        }
+
+        $this->config = array_merge($this->config, $data);
     }
 
     /**
