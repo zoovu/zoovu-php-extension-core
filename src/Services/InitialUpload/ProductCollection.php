@@ -183,7 +183,7 @@ class ProductCollection {
 
     /**
      * Return all product files that still have to be uploaded.
-     * Retu
+     *
      */
     public function filesToUpload()
     {
@@ -195,7 +195,7 @@ class ProductCollection {
 
         // remove all elements that end in .completed.json
         return array_filter($allFiles, function($path) {
-            return (strpos($path, '.completed.json') === false);
+            return (strpos($path, '.uploaded.json') === false);
         });
     }
 

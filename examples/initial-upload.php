@@ -30,10 +30,12 @@ if($uploader->isCollecting()) {
 
 if($uploader->isUploading()) {
     // send product batches to semknox
-    do {
-        $numUploaded = $uploader->sendUploadBatch();
-    } while($numUploaded > 0);
+    //do {
+    //    $numUploaded = $uploader->sendUploadBatch();
+    //} while($numUploaded > 0);
 
-    // signalize that all products have been sent
-    $uploader->finalizeUpload();
+    if($uploader->sendUploadBatch() === 0) {
+        // signalize that all products have been sent
+        $uploader->finalizeUpload();
+    }
 }

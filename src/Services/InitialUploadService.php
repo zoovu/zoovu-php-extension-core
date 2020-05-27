@@ -1,5 +1,6 @@
 <?php namespace Semknox\Core\Services;
 
+use LogicException;
 use Semknox\Core\Services\InitialUpload\ProductCollection;
 use Semknox\Core\Services\InitialUpload\Status;
 use Semknox\Core\Services\InitialUpload\WorkingDirectory;
@@ -99,8 +100,10 @@ class InitialUploadService {
      */
     public function __destruct()
     {
-        // permanent all products to file
-        $this->productCollection->writeToFile();
+        if($this->getPhase() === ($this->status)::PHASE_COLLECTING) {
+            // permanent all collected products to file
+            $this->productCollection->writeToFile();
+        }
 
         // write status from memory to file
         $this->status->writeToFile();
@@ -124,7 +127,7 @@ class InitialUploadService {
     public function startCollecting($config = [])
     {
         if($this->isRunning()) {
-            throw new \RuntimeException('Initial upload is already running. Can not start a new initial upload. Please wait for the previous upload to complete or abort the upload first.');
+            throw new LogicException('Initial upload is already running. Can not start a new initial upload. Please wait for the previous upload to complete or abort the upload first.');
         }
 
         $this->workingDirectory = WorkingDirectoryFactory::createNew(
@@ -144,7 +147,7 @@ class InitialUploadService {
     public function addProduct($product, $parameters=[])
     {
         if($this->getPhase() !== Status::PHASE_COLLECTING) {
-            throw new \RuntimeException('Can not add products because current initial upload is not in phase "collecting".');
+            throw new LogicException('Can not add products because current initial upload is not in phase "collecting".');
         }
 
         if($this->transformerClass) {
@@ -205,7 +208,7 @@ class InitialUploadService {
 
         // rename file to .completed.
         // Todo: this should not be done by this service
-        rename($file, str_replace('.json', '.completed.json', $file));
+        rename($file, str_replace('.json', '.uploaded.json', $file));
 
         return $numberOfProducts;
     }

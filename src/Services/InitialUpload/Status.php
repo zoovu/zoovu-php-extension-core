@@ -243,13 +243,13 @@ class Status
         $phase = $this->getPhase();
 
         switch($phase) {
-            // collecting is the first 90% of the upload
+            // collecting is the first 89% of the upload
             case self::PHASE_COLLECTING:
-                return round($this->getCollectingProgress() * 0.9);
+                return floor($this->getCollectingProgress() * 0.89);
                 break;
             // uploading is the remaining 10% of the upload
             case self::PHASE_UPLOADING:
-                return round(90 + ($this->getUploadingProgress() * 0.1));
+                return floor(89 + ($this->getUploadingProgress() * 0.1));
                 break;
             // aborted or completed should be 100%
             default:

@@ -1,8 +1,5 @@
 <?php namespace Semknox\Core\Services\Traits;
 
-use Semknox\Core\Services\ApiClient;
-use Semknox\Core\SxConfig;
-
 trait SingletonTrait
 {
     /**
@@ -11,8 +8,7 @@ trait SingletonTrait
     private static $instance;
 
     /**
-     * Get
-     * @param SxConfig $config
+     * Get an instance of this class object.
      *
      * @return self
      */
