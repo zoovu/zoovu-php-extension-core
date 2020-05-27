@@ -27,8 +27,6 @@ if($uploader->isCollecting()) {
 
 // while uploading trigger to send a product batch
 if($uploader->isUploading()) {
-    echo 'uploading';
-
     $numUploaded = $uploader->sendUploadBatch();
 
     if($numUploaded === 0) {
