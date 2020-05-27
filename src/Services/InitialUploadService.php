@@ -84,7 +84,7 @@ class InitialUploadService {
      *   - get the current upload status from the working directory
      *   - initialize the product collection
      */
-    private function init($initialUploadConfig)
+    private function init(array $initialUploadConfig=[])
     {
         $this->status = new Status($this->workingDirectory, $initialUploadConfig);
 
