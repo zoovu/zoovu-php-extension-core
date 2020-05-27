@@ -31,7 +31,7 @@ class Status
      *
      * @param array $status Status information
      */
-    public function __construct(WorkingDirectory &$workingDirectory, array $config)
+    public function __construct(WorkingDirectory &$workingDirectory, array $config=[])
     {
         $this->workingDirectory = $workingDirectory;
 
@@ -208,7 +208,7 @@ class Status
      */
     public function increaseNumberOfUploaded($numUploaded=1)
     {
-        $this->data['collected'] += $numUploaded;
+        $this->data['uploaded'] += $numUploaded;
 
         return $this;
     }

@@ -141,10 +141,6 @@ class ProductCollection {
      */
     public function add(array $product)
     {
-        $product = $this->enforceStringValues($product);
-
-        $this->productCollection[] = $product;
-
         if(count($this->productCollection) >= $this->productCollectionMaxSize) {
             $this->writeToFile();
 
@@ -152,6 +148,10 @@ class ProductCollection {
 
             $this->clear();
         }
+
+        $product = $this->enforceStringValues($product);
+
+        $this->productCollection[] = $product;
     }
 
     /**

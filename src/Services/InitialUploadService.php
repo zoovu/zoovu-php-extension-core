@@ -176,14 +176,6 @@ class InitialUploadService {
 
         // signalise start of inital product upload
         $this->client->request('POST', 'products/batch/initiate');
-
-
-        // ..
-        // upload products
-        // ..
-
-
-
     }
 
     /**
