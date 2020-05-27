@@ -12,7 +12,9 @@ $uploader = $sxCore->getInitialUploader();
 
 // start a new upload (start collecting products)
 if($uploader->isStopped()) {
-    $uploader->startCollecting();
+    $uploader->startCollecting([
+        'expectedNumberOfProducts' => count($jsonProducts)
+    ]);
 }
 
 // while it is collecting products add products
@@ -25,11 +27,13 @@ if($uploader->isCollecting()) {
     $uploader->startUploading();
 }
 
-// while uploading trigger to send a product batch
-if($uploader->isUploading()) {
-    $numUploaded = $uploader->sendUploadBatch();
 
-    if($numUploaded === 0) {
-        $uploader->finalizeUpload();
-    }
+if($uploader->isUploading()) {
+    // send product batches to semknox
+    do {
+        $numUploaded = $uploader->sendUploadBatch();
+    } while($numUploaded > 0);
+
+    // signalize that all products have been sent
+    $uploader->finalizeUpload();
 }
