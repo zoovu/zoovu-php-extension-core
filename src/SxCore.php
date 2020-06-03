@@ -4,6 +4,7 @@ use Semknox\Core\Services\ApiClient;
 use Semknox\Core\Services\InitialUploadOverviewService;
 use Semknox\Core\Services\InitialUploadService;
 use Semknox\Core\Services\SearchService;
+use Semknox\Core\Services\SearchSuggestionService;
 
 class SxCore {
 
@@ -52,5 +53,15 @@ class SxCore {
         $client = new ApiClient($this->config);
 
         return new SearchService($client);
+    }
+
+    /**
+     * Return the searchSuggestions service.
+     */
+    public function getSearchSuggestions()
+    {
+        $client = new ApiClient($this->config);
+
+        return new SearchSuggestionService($client);
     }
 }

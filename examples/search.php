@@ -7,8 +7,18 @@ $sxCore = makeSxCore();
 
 $search = $sxCore->getSearch();
 
-$result = $search->query('Ding')->search();
+$result = $search->query('ding')->search();
 
+var_dump($result->getAvailableResults());
+
+$i=0;
 foreach($result->getResults() as $product) {
-    var_dump($product);echo "<br><br>";
+    $i++;
+    var_dump($product->getProductType());echo "<br><br>";
 }
+
+echo '['.$i.']';
+
+echo '<hr><br><hr><br>';
+
+var_dump($result->getAvailableFilters());

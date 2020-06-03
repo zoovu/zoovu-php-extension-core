@@ -128,11 +128,23 @@ echo $uploader->getRemainingTime(); // returns the expected remaining upload tim
 $search = $sxCore->getSearch();
 
 // search() returns a SearchResponse
-$response = $search->setQuery('ding')
+$response = $search->query('ding')
                    ->search();
 
-$totalResults   = $response->getTotalResults();
-$products       = $response->getResults();
-$interpretation = $response->getInterpretedQuery();
+$totalResults = $response->getTotalResults();
+$products     = $response->getResults();
+$answer       = $response->getAnswerText();
+~~~
 
+## Search suggestions 
+
+~~~php
+$search = $sxCore->getSearchSuggestions();
+
+// search() returns a SearchSuggestionResponse
+$response = $search->limitProducts(8)
+                   ->query('ding')
+                   ->search();
+
+$products = $response->getProducts();
 ~~~
