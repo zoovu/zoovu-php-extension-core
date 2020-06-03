@@ -132,7 +132,7 @@ $response = $search->query('ding')
                    ->search();
 
 $totalResults = $response->getTotalResults();
-$products     = $response->getResults();
+$products     = $response->getProducts();
 $answer       = $response->getAnswerText();
 ~~~
 

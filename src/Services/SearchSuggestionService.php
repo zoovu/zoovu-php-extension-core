@@ -11,20 +11,24 @@ class SearchSuggestionService {
     protected $client;
 
     /**
-     * How many results
+     * How many results to get for each content group.
      * @var int[]
      */
-    protected $limits = [
+    protected $defaultLimits = [
         'brand' => 2,
         'search' => 3,
         'category' => 3,
-        'product' => 5,
+        'product' => 1,
         'content' => 3,
     ];
 
     public function __construct(ApiClient $client)
     {
         $this->client = $client;
+
+        foreach($this->defaultLimits as $name => $limit) {
+            $this->limit($name, $limit);
+        }
     }
 
     /**
@@ -47,7 +51,9 @@ class SearchSuggestionService {
      */
     private function limit(string $what, int $limit)
     {
-        $this->client->setParam($what, $limit);
+        $name = 'limit' . ucfirst($what);
+
+        $this->client->setParam($name, $limit);
 
         return $this;
     }
@@ -59,7 +65,7 @@ class SearchSuggestionService {
      */
     public function limitBrand(int $limit)
     {
-        return $this->limit('limitBrand', $limit);
+        return $this->limit('brand', $limit);
     }
 
     /**
@@ -69,7 +75,7 @@ class SearchSuggestionService {
      */
     public function limitSearch(int $limit)
     {
-        return $this->limit('limitSearch', $limit);
+        return $this->limit('search', $limit);
     }
 
     /**
@@ -79,7 +85,7 @@ class SearchSuggestionService {
      */
     public function limitCategory(int $limit)
     {
-        return $this->limit('limitCategory', $limit);
+        return $this->limit('category', $limit);
     }
 
     /**
@@ -89,7 +95,7 @@ class SearchSuggestionService {
      */
     public function limitProduct(int $limit)
     {
-        return $this->limit('limitProduct', $limit);
+        return $this->limit('product', $limit);
     }
 
     /**
@@ -99,7 +105,7 @@ class SearchSuggestionService {
      */
     public function limitContent(int $limit)
     {
-        return $this->limit('limitContent', $limit);
+        return $this->limit('content', $limit);
     }
 
     /**

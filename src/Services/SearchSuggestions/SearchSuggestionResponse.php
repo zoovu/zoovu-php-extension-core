@@ -1,6 +1,6 @@
 <?php namespace Semknox\Core\Services\SearchSuggestions;
 
-use Semknox\Core\Services\Search\ResultItem;
+use Semknox\Core\Services\Search\Product;
 use Semknox\Core\Services\Search\ResultItemFactory;
 
 class SearchSuggestionResponse {
@@ -13,10 +13,12 @@ class SearchSuggestionResponse {
 
     /**
      * Get suggested products
-     * @return ResultItem[]
+     * @return Product[]
      */
     public function getProducts()
     {
+        var_dump($this->data);
+
         $products = isset($this->data['suggests']['Products'])
             ? $this->data['suggests']['Products']
             : [];

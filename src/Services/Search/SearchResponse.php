@@ -68,7 +68,7 @@ class SearchResponse
     }
 
     /**
-     *
+     * Return the number of available results.
      */
     public function getAvailableResults()
     {
@@ -77,24 +77,33 @@ class SearchResponse
 
     /**
      * Alias for `getResults()`.
-     * @return ResultItem[]
+     * @param bool $flattened
+     * @return Product[]
      */
-    public function getProducts()
+    public function getProducts($flattened=false)
     {
-        return $this->getResults();
+        return $this->getResults($flattened);
     }
 
     /**
      * Return an array of ResultItems (i.e. the products)
-     * @return ResultItem[]
+     * @param bool $flattened Return grouped products as standalone products.
+     * @return Product[]
      */
-    public function getResults()
+    public function getResults($flattened=false)
     {
         $return = [];
         $results = $this->get('searchResults');
 
-        foreach($results as $result) {
-            $return[] = ResultItemFactory::getProduct($result);
+        foreach($results as $items) {
+            if($flattened) {
+                foreach($items as $item) {
+                    $return[] = ResultItemFactory::getProduct([$item]);
+                }
+            }
+            else {
+                $return[] = ResultItemFactory::getProduct($items);
+            }
         }
 
         return $return;

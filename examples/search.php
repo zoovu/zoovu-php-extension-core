@@ -9,15 +9,14 @@ $search = $sxCore->getSearch();
 
 $result = $search->query('ding')->search();
 
-var_dump($result->getAvailableResults());
+$products = $result->getProducts();
 
-$i=0;
-foreach($result->getResults() as $product) {
-    $i++;
-    var_dump($product->getProductType());echo "<br><br>";
+echo 'Number of products: ' . $result->getTotalResults() . "<br>";
+foreach($products as $product) {
+    echo $product->getId() . ' - ' . $product->getName();
+    //var_dump($product);
+    echo "<br><br>\n\n";
 }
-
-echo '['.$i.']';
 
 echo '<hr><br><hr><br>';
 

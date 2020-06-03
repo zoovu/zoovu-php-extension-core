@@ -57,6 +57,7 @@ class SxCore {
 
     /**
      * Return the searchSuggestions service.
+     * @return SearchSuggestionService
      */
     public function getSearchSuggestions()
     {
