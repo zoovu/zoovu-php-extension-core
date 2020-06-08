@@ -2,8 +2,12 @@
 
 namespace Semknox\Core\Services\Search;
 
+use Semknox\Core\Services\Traits\ArrayGetTrait;
+
 class SearchResponse
 {
+    use ArrayGetTrait;
+
     /**
      * Raw Semknox search response
      * @var array
@@ -17,9 +21,7 @@ class SearchResponse
 
     private function get($key, $default=null)
     {
-        return isset($this->response[$key])
-            ? $this->response[$key]
-            : $default;
+        return $this->arrayGet($this->response, $key, $default);
     }
 
     /**
@@ -93,7 +95,7 @@ class SearchResponse
     public function getResults($flattened=false)
     {
         $return = [];
-        $results = $this->get('searchResults');
+        $results = $this->get('resultGroups.Produkte');
 
         foreach($results as $items) {
             if($flattened) {

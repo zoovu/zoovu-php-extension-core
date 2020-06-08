@@ -2,8 +2,11 @@
 
 use Semknox\Core\Services\Search\Product;
 use Semknox\Core\Services\Search\ResultItemFactory;
+use Semknox\Core\Services\Traits\ArrayGetTrait;
 
 class SearchSuggestionResponse {
+    use ArrayGetTrait;
+
     protected $data;
 
     public function __construct(array $data)
@@ -17,11 +20,7 @@ class SearchSuggestionResponse {
      */
     public function getProducts()
     {
-        var_dump($this->data);
-
-        $products = isset($this->data['suggests']['Products'])
-            ? $this->data['suggests']['Products']
-            : [];
+        $products = $this->arrayGet($this->data, 'resultGroups.Produkte');
 
         $result = [];
 

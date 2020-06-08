@@ -22,7 +22,10 @@ class ApiClient
 	 */
 	const MAXLIMIT = 108;
 
-
+    /**
+     * The base url for every request.
+     * @var string
+     */
 	protected $apiBaseUrl;
 
 	/**
@@ -58,6 +61,8 @@ class ApiClient
 
 	public function __construct(SxConfig $config)
 	{
+	    $this->apiBaseUrl = $config->getApiUrl();
+
 		$this->client = new Client([
 		    'base_uri' => $config->getApiUrl(),
             'timeout'  => $config->getTimeout(),
@@ -233,21 +238,18 @@ class ApiClient
 	}
 
 	/**
-	 * Return the uri with all parameters for the current request.
+	 * Return the url with all set parameters for the current request.
+     *
 	 * @param $uri
 	 * @param $addCredentials
 	 *
 	 * @return string
 	 */
-	public function getRequestUri($uri, $addCredentials = true)
+	public function getRequestUrl($uri)
 	{
-
-		if( $addCredentials && ! $this->isAuthenticationSet()) {
-			$this->getApiCredentials();
-		}
-
 		$uri   = $this->apiBaseUrl . $uri;
-		$query = http_build_query($this->params);
+		$params = $this->makeGuzzleRequestParams('get')['query'];
+		$query = http_build_query($params);
 
 		if($query) {
 			$uri .= '?' . $query;

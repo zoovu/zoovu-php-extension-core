@@ -5,17 +5,15 @@ require __DIR__ . '/_config.php';
 $sxCore = makeSxCore();
 
 
-$suggestions = $sxCore->getSearchSuggestions();
+$suggestions = $sxCore->getSearchSuggestions()
+                      ->query('ding');
 
-$result = $suggestions
-            ->query('ding')
-            ->search();
+echo sprintf('url: %s <br>', $suggestions->getRequestUrl());
 
+$result = $suggestions->search();
 $products = $result->getProducts();
 
-var_dump($products);
-
 foreach($products as $product) {
-    echo $product->getId();
+    echo $product->getId() . '<br>';
 }
 

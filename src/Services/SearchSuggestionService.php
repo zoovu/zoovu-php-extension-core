@@ -130,4 +130,13 @@ class SearchSuggestionService {
 
         return new SearchSuggestionResponse($response);
     }
+
+    /**
+     * Return the request uri for this search suggestion.
+     * @return string
+     */
+    public function getRequestUrl()
+    {
+        return $this->client->getRequestUrl('search/suggestions');
+    }
 }
