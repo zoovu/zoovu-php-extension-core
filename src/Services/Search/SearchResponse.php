@@ -2,6 +2,7 @@
 
 namespace Semknox\Core\Services\Search;
 
+use Semknox\Core\Services\Search\Filters\TreeFilter;
 use Semknox\Core\Services\Traits\ArrayGetTrait;
 
 class SearchResponse
@@ -44,11 +45,19 @@ class SearchResponse
 
     /**
      * Return all filter options available for this search.
-     * @return mixed|null
+     * @return TreeFilter[]
      */
     public function getAvailableFilters()
     {
-        return $this->get('filterOptions');
+        $activeFilters = $this->getActiveFilters();
+        $filters = $this->get('filterOptions');
+        $result = [];
+
+        foreach($filters as $filter) {
+            $result[] = SearchResultFactory::getFilter($filter, $activeFilters);
+        }
+
+        return $result;
     }
 
     /**
@@ -60,31 +69,40 @@ class SearchResponse
         return $this->get('activeFilterOptions');
     }
 
+    public function getAvailableSortingOptions()
+    {
+        return [];
+    }
+
     /**
-     * Return the number of total results for this search. This includes all variations. If you have two products and one of them is a variable product with 6 sub-variations, the returned value will be 8.
+     * Return the number of total results for this search. If no $resultGroup is passed this will include products as well as content results.
+     * @param null $resultGroup TotalResults of which resultGroup. If null it will return the number of results for all resultGroups combined.
      * @return mixed|null
      */
-    public function getTotalResults()
+    public function getTotalResults($resultGroup=null)
     {
-        return $this->get('totalResults');
+        return $resultGroup
+            ? $this->getResultGroup($resultGroup, 'totalResults')
+            : $this->get('totalResults');
     }
 
     /**
-     * Return the number of available results.
+     * Get the total number of products found for this request
+     * @return array|mixed|null
      */
-    public function getAvailableResults()
+    public function getTotalProductResults()
     {
-        return $this->get('resultsAvailable');
+        return $this->getTotalResults('products');
     }
 
     /**
-     * Alias for `getResults()`.
+     * Alias for `getResults('products')`.
      * @param bool $flattened
      * @return Product[]
      */
-    public function getProducts($flattened=false)
+    public function getProducts()
     {
-        return $this->getResults($flattened);
+        return $this->getResults('products');
     }
 
     /**
@@ -92,22 +110,49 @@ class SearchResponse
      * @param bool $flattened Return grouped products as standalone products.
      * @return Product[]
      */
-    public function getResults($flattened=false)
+    public function getResults($groupType, $flattened=false)
     {
         $return = [];
-        $results = $this->get('resultGroups.Produkte');
 
-        foreach($results as $items) {
+        $products = $this->getResultGroup($groupType, 'results');
+
+        foreach($products as $items) {
             if($flattened) {
                 foreach($items as $item) {
-                    $return[] = ResultItemFactory::getProduct([$item]);
+                    $return[] = SearchResultFactory::getProduct([$item]);
                 }
             }
             else {
-                $return[] = ResultItemFactory::getProduct($items);
+                $return[] = SearchResultFactory::getProduct($items);
             }
         }
 
         return $return;
     }
+
+    /**
+     * Return the searchResult-group with the given type. The type can be "products" or "content".
+     * @param $groupType
+     * @param $key Which key to return from the found searchResultGroup. Returns the whole resultGroup when no key is specified.
+     * @return array
+     */
+    private function getResultGroup($groupType, $key=null)
+    {
+        foreach($this->get('searchResults') as $searchResult) {
+            if($searchResult['type'] === $groupType) {
+                if(!$key) {
+                    return $searchResult;
+                }
+                else {
+                    return isset($searchResult[$key])
+                        ? $searchResult[$key]
+                        : [];
+                }
+            }
+        }
+
+        return [];
+    }
+
+
 }

@@ -1,6 +1,11 @@
 <?php namespace Semknox\Core\Services\Search;
 
-abstract class ResultItemFactory
+use Semknox\Core\Exceptions\LogicException;
+use Semknox\Core\Services\Search\Filters\CollectionFilter;
+use Semknox\Core\Services\Search\Filters\RangeFilter;
+use Semknox\Core\Services\Search\Filters\TreeFilter;
+
+abstract class SearchResultFactory
 {
     /**
      * Get a instance of Product\Simple, Product\Bundle or Product\Variation
@@ -32,35 +37,26 @@ abstract class ResultItemFactory
 
             return new Product($master, $childs);
         }
-
-
     }
 
-    // @deprecated
-    private function getProductSeparated($productData)
+    /**
+     * Create a filter object.
+     * @param array $filterData
+     */
+    public static function getFilter(array $filterData, array $activeFilters)
     {
-        if(count($productData) === 1) {
-            return new Product\Simple($productData);
+        switch(strtoupper($filterData['type'])) {
+            case 'TREE':
+                return new TreeFilter($filterData);
+
+            case 'RANGE':
+                return new RangeFilter($filterData);
+
+            case 'COLLECTION':
+                return new CollectionFilter($filterData);
         }
-        else {
-            // if all groupId are the same, it's a variation, otherwise a bundle
-            $isVariation = true;
-            $groupId = null;
 
-            foreach($productData as $variation) {
-                if($groupId === null) {
-                    $groupId = $variation['groupId'];
-                }
-
-                if($variation['groupId'] !== $groupId) {
-                    $isVariation = false;
-                    break;
-                }
-            }
-
-            return $isVariation
-                ? new Product\Variation($productData)
-                : new Product\Bundle($productData);
-        }
+        $exceptionMessage = sprintf('Undefined filter type "%s" received.', $filterData['type']);
+        throw new LogicException($exceptionMessage);
     }
 }

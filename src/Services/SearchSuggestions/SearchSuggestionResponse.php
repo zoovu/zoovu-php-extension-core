@@ -1,7 +1,7 @@
 <?php namespace Semknox\Core\Services\SearchSuggestions;
 
 use Semknox\Core\Services\Search\Product;
-use Semknox\Core\Services\Search\ResultItemFactory;
+use Semknox\Core\Services\Search\SearchResultFactory;
 use Semknox\Core\Services\Traits\ArrayGetTrait;
 
 class SearchSuggestionResponse {
@@ -25,7 +25,7 @@ class SearchSuggestionResponse {
         $result = [];
 
         foreach($products as $product) {
-            $result[] = ResultItemFactory::getProduct($product);
+            $result[] = SearchResultFactory::getProduct($product);
         }
 
         return $result;
