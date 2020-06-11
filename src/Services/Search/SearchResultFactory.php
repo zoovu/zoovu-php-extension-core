@@ -4,6 +4,7 @@ use Semknox\Core\Exceptions\LogicException;
 use Semknox\Core\Services\Search\Filters\CollectionFilter;
 use Semknox\Core\Services\Search\Filters\RangeFilter;
 use Semknox\Core\Services\Search\Filters\TreeFilter;
+use Semknox\Core\Services\Search\Sorting\SortingOption;
 
 abstract class SearchResultFactory
 {
@@ -58,5 +59,15 @@ abstract class SearchResultFactory
 
         $exceptionMessage = sprintf('Undefined filter type "%s" received.', $filterData['type']);
         throw new LogicException($exceptionMessage);
+    }
+
+    /**
+     * Create a sorting option object.
+     * @param $option
+     * @param array $activeSort
+     */
+    public static function getSortingOption($option, array $activeSort)
+    {
+        return new SortingOption($option);
     }
 }

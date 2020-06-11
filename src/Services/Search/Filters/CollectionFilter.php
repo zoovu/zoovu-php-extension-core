@@ -8,7 +8,6 @@ class CollectionFilter extends AbstractFilter {
     public function getOptions()
     {
         $values = $this->filterData['values'];
-        $counts = $this->filterData['counts'];
         $result = [];
 
         foreach($values as $value) {
@@ -17,7 +16,7 @@ class CollectionFilter extends AbstractFilter {
                'key'      => $value['key'],
                'name'     => $value['name'],
                'viewName' => $value['name'],
-               'count'    => $counts[$value['key']],
+               'count'    => $value['count'],
                'children' => []
            ]);
         }

@@ -3,6 +3,7 @@
 namespace Semknox\Core\Services\Search;
 
 use Semknox\Core\Services\Search\Filters\TreeFilter;
+use Semknox\Core\Services\Search\Sorting\SortingOption;
 use Semknox\Core\Services\Traits\ArrayGetTrait;
 
 class SearchResponse
@@ -69,9 +70,27 @@ class SearchResponse
         return $this->get('activeFilterOptions');
     }
 
+    /**
+     * Get available sorting options.
+     *
+     * @return SortingOption[]
+     */
     public function getAvailableSortingOptions()
     {
-        return [];
+        $activeSort = $this->getActiveSortingOption();
+        $sortingOptions = $this->get('sortingOptions');
+        $result = [];
+
+        foreach($sortingOptions as $option) {
+            $result[] = SearchResultFactory::getSortingOption($option, $activeSort);
+        }
+
+        return $result;
+    }
+
+    public function getActiveSortingOption()
+    {
+        return $this->get('activeSortingOption');
     }
 
     /**
@@ -103,6 +122,15 @@ class SearchResponse
     public function getProducts()
     {
         return $this->getResults('products');
+    }
+
+    /**
+     * Return all products. Does not group variations together. Alias for `getResults('products', true)`.
+     * @return Product[]
+     */
+    public function getProductsFlattened()
+    {
+        return $this->getResults('products', true);
     }
 
     /**

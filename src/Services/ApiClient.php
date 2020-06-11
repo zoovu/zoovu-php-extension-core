@@ -247,7 +247,7 @@ class ApiClient
 	 */
 	public function getRequestUrl($uri)
 	{
-		$uri   = $this->apiBaseUrl . $uri;
+		$uri   = $this->apiBaseUrl . '/' . $uri;
 		$params = $this->makeGuzzleRequestParams('get')['query'];
 		$query = http_build_query($params);
 

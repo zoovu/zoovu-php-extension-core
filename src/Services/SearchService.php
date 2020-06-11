@@ -44,9 +44,37 @@ class SearchService {
      */
     public function addFilter($name, $values)
     {
-        $this->filters[] = [
-            $name => $values
-        ];
+        if(count($values) === 2 && count(array_filter($values, 'is_numeric')) === 2) {
+            $this->filters[] = [
+                'name' => $name,
+                'min' => min($values),
+                'max' => max($values)
+            ];
+        }
+        else {
+            $values = array_map(function($value) {
+                return [
+                    'name' => $value
+                ];
+            }, $values);
+
+            $this->filters[] = [
+                'name' => $name,
+                'values' => $values
+            ];
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sort the results by a given query.
+     * @param string $sortName
+     * @return SearchService
+     */
+    public function sortBy($sortName)
+    {
+        $this->client->setParam('sort', $sortName);
 
         return $this;
     }
@@ -109,6 +137,5 @@ class SearchService {
         $this->client->setParam('limit', $this->limit);
 
         $this->client->setParam('filters', json_encode($this->filters));
-        $this->client->setParam('nameParsing', true);
     }
 }
