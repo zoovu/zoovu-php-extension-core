@@ -70,7 +70,7 @@ class InitialUploadOverviewService
             $identifier = $matches[1];
             $phase = $matches[3];
 
-            if(in_array($phase, $runningPhases)) {
+            if($phase && in_array($phase, $runningPhases)) {
                 $workingDirectory = new WorkingDirectory($directory);
 
                 $status = new Status($workingDirectory);
