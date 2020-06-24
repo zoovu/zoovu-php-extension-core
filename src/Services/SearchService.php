@@ -79,7 +79,7 @@ class SearchService {
         }
         else {
             $sort = ['key' => $sortName, 'direction' => $direction];
-            $this->client->setParam('sortComplex', $sort);
+            $this->client->setParam('sortComplex', json_encode($sort));
         }
 
         return $this;
@@ -110,6 +110,18 @@ class SearchService {
     }
 
     /**
+     * Set the user group for this search.
+     * @param $userGroup
+     *
+     * @return $this
+     */
+    public function setUserGroup($userGroup)
+    {
+        $this->client->setParam('userGroup', $userGroup);
+        return $this;
+    }
+
+    /**
      * Start the search.
      * @return SearchResponse
      */
@@ -132,6 +144,8 @@ class SearchService {
 
         return $this->client->getRequestUrl('search');
     }
+
+
 
     /**
      * Set additional parameters before submitting the search.

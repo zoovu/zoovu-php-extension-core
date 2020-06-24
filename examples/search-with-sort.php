@@ -8,7 +8,8 @@ $sxCore = makeSxCore();
 $search = $sxCore->getSearch();
 
 $search = $search->query('*')
-                 ->sortBy('Preis aufsteigend')
+//                 ->sortBy('Preis aufsteigend')
+                 ->sortBy('162556', 'ASC')
 ;
 
 echo 'Url: ' . $search->getRequestUrl() . "<br>";

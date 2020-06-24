@@ -67,8 +67,6 @@ class ProductUpdateService extends ProductUpdateServiceAbstract {
             return 0;
         }
 
-        var_dump($file);die();
-
         // start upload of batches
         $products = file_get_contents($file);
         $products = json_decode($products, true);
