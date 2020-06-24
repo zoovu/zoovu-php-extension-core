@@ -1,6 +1,6 @@
 <?php
 
-namespace Semknox\Core\Services\InitialUpload;
+namespace Semknox\Core\Services\ProductUpdate;
 
 class WorkingDirectory
 {

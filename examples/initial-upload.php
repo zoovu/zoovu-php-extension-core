@@ -1,6 +1,6 @@
 <?php
 
-use Semknox\Core\Services\InitialUpload\Status;
+use Semknox\Core\Services\ProductUpdate\Status;
 
 require __DIR__ . '/_config.php';
 

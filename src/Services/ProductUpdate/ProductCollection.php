@@ -1,4 +1,4 @@
-<?php namespace Semknox\Core\Services\InitialUpload;
+<?php namespace Semknox\Core\Services\ProductUpdate;
 
 /**
  * Class ProductCollection contains all products that are being collected
@@ -149,26 +149,10 @@ class ProductCollection {
             $this->clear();
         }
 
-        $product = $this->enforceStringValues($product);
-
         $this->productCollection[] = $product;
     }
 
-    /**
-     * Cast all numeric values to strings, because Semknox API requires String values instead of numeric JSON values.
-     * @param array $product
-     * @return array
-     */
-    private function enforceStringValues(array $product)
-    {
-        array_walk_recursive($product, function(&$item, $key) {
-            if(is_numeric($item)) {
-                $item = (string) $item;
-            }
-        });
 
-        return $product;
-    }
 
     /**
      * Return all product files in the current working directory.

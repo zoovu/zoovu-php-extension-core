@@ -1,102 +1,36 @@
 <?php namespace Semknox\Core\Services;
 
-use LogicException;
-use Semknox\Core\Services\InitialUpload\ProductCollection;
-use Semknox\Core\Services\InitialUpload\Status;
-use Semknox\Core\Services\InitialUpload\WorkingDirectory;
-use Semknox\Core\Services\InitialUpload\WorkingDirectoryFactory;
+use Semknox\Core\Exceptions\LogicException;
+use Semknox\Core\Services\ProductUpdate\ProductCollection;
+use Semknox\Core\Services\ProductUpdate\Status;
+use Semknox\Core\Services\ProductUpdate\WorkingDirectory;
+use Semknox\Core\Services\ProductUpdate\WorkingDirectoryFactory;
 use Semknox\Core\SxConfig;
 
 
 /**
  * Class InitialUploadService. Handles collecting of products and upload to Semknox.
- *
- * @package Semknox\Core\Services
- * @method bool isRunning()
- * @method bool isStopped()
- * @method bool isCollecting()
- * @method bool isUploading()
- * @method bool isCompleted()
- * @method bool isAborted()
- * @method string getPhase()
- * @method int getNumberOfCollected()
- * @method int getCollectingProgress()
- * @method int getNumberOfUploaded()
- * @method int getUploadingProgress()
- * @method int getTotalProgress()
- * @method int getRemainingDuration()
  */
-class InitialUploadService {
-
-    /**
-     * @var ApiClient
-     */
-    private $client;
-
-    /**
-     * @var SxConfig
-     */
-    private $config;
-
-    /**
-     * Full class name of the transformer to use
-     * @var string
-     */
-    private $transformerClass;
-
-    /**
-     * The path to the current working directory.
-     * @var WorkingDirectory
-     */
-    private $workingDirectory;
-
-    /**
-     * Current initial upload status
-     * @var Status
-     */
-    private $status;
-
-    /**
-     * Products that are being collected.
-     *
-     * @var ProductCollection
-     */
-    private $productCollection;
-
+class InitialUploadService extends ProductUpdateServiceAbstract {
 
     public function __construct(ApiClient $client, SxConfig $config)
     {
-        $this->client = $client;
-
-        $this->config = $config;
+        parent::__construct(
+            $client,
+            $config
+        );
 
         $this->workingDirectory = WorkingDirectoryFactory::getLatest(
             $config->getStoragePath(),
             $config->getInitialUploadDirectoryIdentifier()
         );
 
-        $this->transformerClass = $this->config->getProductTransformer();
-
         $this->init();
     }
 
-    /**
-     * Initialize the InitialUploadService:
-     *   - get the current upload status from the working directory
-     *   - initialize the product collection
-     */
-    private function init(array $initialUploadConfig=[])
-    {
-        $this->status = new Status($this->workingDirectory, $initialUploadConfig);
-
-        $this->productCollection = new ProductCollection($this->workingDirectory, [
-            'maxSize' => $this->config->getInitialUploadBatchSize()
-        ]);
-    }
-
 
     /**
-     * When the request is ended, permanent the products into the currently active file.
+     * When the request is ended, permanent the collcted products into the currently active file.
      */
     public function __destruct()
     {
@@ -110,13 +44,27 @@ class InitialUploadService {
     }
 
     /**
-     * Pass through status methods (isRunning())
+     * Pass through status methods (isRunning(), is Stopped())
      */
     public function __call($method, $args)
     {
         if(method_exists($this->status, $method)) {
             return call_user_func_array([$this->status, $method], $args);
         }
+    }
+
+    /**
+     * Initialize the InitialUploadService:
+     *   - get the current upload status from the working directory
+     *   - initialize the product collection
+     */
+    private function init(array $initialUploadConfig=[])
+    {
+        $this->status = new Status($this->workingDirectory, $initialUploadConfig);
+
+        $this->productCollection = new ProductCollection($this->workingDirectory, [
+            'maxSize' => $this->config->getUploadBatchSize()
+        ]);
     }
 
     /**
@@ -141,8 +89,7 @@ class InitialUploadService {
     }
 
     /**
-     * Add a product to be uploaded.
-     * @param $product
+     * @inheritDoc
      */
     public function addProduct($product, $parameters=[])
     {
@@ -150,18 +97,11 @@ class InitialUploadService {
             throw new LogicException('Can not add products because current initial upload is not in phase "collecting".');
         }
 
-        if($this->transformerClass) {
-            $transformer = new $this->transformerClass($product);
-
-            $product = $transformer->transform($parameters);
-        }
-
-        // todo: validation
-
-        // add product to collection
-        $this->productCollection->add($product);
+        $return = parent::addProduct($product, $parameters);
 
         $this->status->increaseNumberOfCollected();
+
+        return $return;
     }
 
     /**
@@ -177,7 +117,6 @@ class InitialUploadService {
 
         $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
 
-        // signalise start of inital product upload
         $this->client->request('POST', 'products/batch/initiate');
     }
 
@@ -213,6 +152,8 @@ class InitialUploadService {
         return $numberOfProducts;
     }
 
+
+
     /**
      * Signalizes Semknox that all product batches have been uploaded and sets status of this upload to "COMPLETED".
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -234,6 +175,10 @@ class InitialUploadService {
         $this->setPhaseTo(($this->status)::PHASE_ABORTED);
     }
 
+    /**
+     * Changes the upload phase. Writes products to file and renames the directory so we can see more easily what state we're in.
+     * @param $newPhase
+     */
     private function setPhaseTo($newPhase)
     {
         // write products currently in memory to file
@@ -245,6 +190,5 @@ class InitialUploadService {
 
         // change phase in status
         $this->status->setPhase($newPhase);
-        $this->status->writeToFile();
     }
 }

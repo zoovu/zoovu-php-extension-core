@@ -1,6 +1,6 @@
 <?php
 
-namespace Semknox\Core\Services\InitialUpload;
+namespace Semknox\Core\Services\ProductUpdate;
 
 use Semknox\Core\Exceptions\FilePermissionException;
 
@@ -32,7 +32,26 @@ abstract class WorkingDirectoryFactory
     }
 
     /**
-     * Create a new empty initial upload working directory called "<$identifier>-<time>" in $storagePath.
+     * Return an instance of WorkingDirectory pointing at todays upload directory.
+     *
+     * @param string $storagePath
+     * @param string $identifier
+     *
+     * @return WorkingDirectory
+     */
+    public static function getToday($storagePath, $identifier='default-store')
+    {
+        $storagePath = rtrim($storagePath, '/');
+
+        $today = date('Ymd');
+
+        $directoryPath = "$storagePath/$identifier-$today";
+
+        return new WorkingDirectory($directoryPath);
+    }
+
+    /**
+     * Create a new empty directory called "<$identifier>-<time>" in $storagePath.
      * @param $storagePath
      * @param string $identifier
      *
@@ -51,7 +70,7 @@ abstract class WorkingDirectoryFactory
         $directory = self::getNextWorkingDirectoryPath($storagePath, $identifier);
 
         if(!is_writable(dirname($directory))) {
-            throw new FilePermissionException('Can not create a new directory for initial upload');
+            throw new FilePermissionException(sprintf('Can not create new directory %s', $directory));
         }
 
         if(!is_dir($directory)) {

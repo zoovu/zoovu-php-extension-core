@@ -85,21 +85,44 @@ class SxConfig {
     }
 
     /**
-     * Get the maximum batch size for the initial upload. This size defines how many products are collected in memory before they are permanented to a file. This also defines how many products are sent to semknox in one request.
+     * Get the maximum batch size for the products updates or the initial upload. This size defines how many products are collected in memory before they are permanented to a file. This also defines how many products are sent to semknox in one request.
      * @return int
      */
-    public function getInitialUploadBatchSize()
+    public function getUploadBatchSize()
     {
-        return $this->get('initialUploadBatchSize');
+        return $this->get('uploadBatchSize', 2000);
     }
 
     /**
-     * Identifier for initial upload. Useful for differentiating between different shops or different language versions of one shop. Defaults to "default-store".
+     * Get the identifier for the current store. This can be e.g. "de" for a German language shop version.
+     */
+    public function getStoreIdentifier()
+    {
+        return $this->get('storeIdentifier', 'default');
+    }
+
+    /**
+     * Identifier for initial upload. Useful for differentiating between different shops or different language versions of one shop. Returns "<projectId>-<storeIdentifier>-initialupload".
      * @return mixed|null
      */
     public function getInitialUploadDirectoryIdentifier()
     {
-        return $this->get('initialUploadIdentifier', 'default-store');
+        return sprintf('%s-%s-initialupload',
+            $this->getProjectId(),
+            $this->getStoreIdentifier()
+        );
+    }
+
+    /**
+     * Identifier for product update. Useful for differentiating between different shops or different language versions of one shop. Returns "<projectId>-<storeIdentifier>-productupdate".
+     * @return mixed|null
+     */
+    public function getProductUpdateDirectoryIdentifier()
+    {
+        return sprintf('%s-%s-productupload',
+            $this->getProjectId(),
+            $this->getStoreIdentifier()
+        );
     }
 
     /**

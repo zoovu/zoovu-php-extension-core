@@ -8,8 +8,8 @@
 namespace Semknox\Core\Services;
 
 
-use Semknox\Core\Services\InitialUpload\Status;
-use Semknox\Core\Services\InitialUpload\WorkingDirectory;
+use Semknox\Core\Services\ProductUpdate\Status;
+use Semknox\Core\Services\ProductUpdate\WorkingDirectory;
 use Semknox\Core\SxConfig;
 
 /**

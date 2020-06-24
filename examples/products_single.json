@@ -1,0 +1,112 @@
+[{
+    "identifier": "531a8af7d9a9a5bb53b65a2b9a5356e5",
+    "groupIdentifier": "531f91d4ab8bfb24c4d04e473d246d0b",
+    "name": "UPDATED: Kuyichi Jeans KYLE",
+    "productUrl": "http://semknox-oxid.local/en/Gear/Fashion/For-Him/Jeans/Kuyichi-Jeans-KYLE-W-30-L-30-Schwarz.html",
+    "categories": [
+        {
+            "path": [
+                "Gear",
+                "Fashion",
+                "For Him",
+                "Jeans"
+            ]
+        }
+    ],
+    "images": [
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/540_340_75/front_z1(2).jpg",
+            "type": "SMALL"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/540_340_75/back_z2(2).jpg",
+            "type": "SMALL"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/540_340_75/detail1_z3(2).jpg",
+            "type": "SMALL"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/540_340_75/detail2_z4(2).jpg",
+            "type": "SMALL"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/665_665_75/front_z1(2).jpg",
+            "type": "LARGE"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/665_665_75/back_z2(2).jpg",
+            "type": "LARGE"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/665_665_75/detail1_z3(2).jpg",
+            "type": "LARGE"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/665_665_75/detail2_z4(2).jpg",
+            "type": "LARGE"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/87_87_75/front_z1(2).jpg",
+            "type": "THUMB"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/87_87_75/back_z2(2).jpg",
+            "type": "THUMB"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/87_87_75/detail1_z3(2).jpg",
+            "type": "THUMB"
+        },
+        {
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/87_87_75/detail2_z4(2).jpg",
+            "type": "THUMB"
+        }
+    ],
+    "attributes": [
+        {
+            "key": "Description",
+            "value": "<p><span id=\"goog-gtc-unit-2\" class=\"goog-gtc-unit\"><span dir=\"ltr\" class=\"goog-gtc-translatable goog-gtc-from-human\">Stylish and slim men's jeans from Kuyichi.&nbsp;</span></span><span id=\"goog-gtc-unit-3\" class=\"goog-gtc-unit\"><span dir=\"ltr\" class=\"goog-gtc-translatable goog-gtc-from-human\">Narrow low boot cut Jeans with straight legs.&nbsp;</span></span><span id=\"goog-gtc-unit-4\" class=\"goog-gtc-unit\"><span dir=\"ltr\" class=\"goog-gtc-translatable goog-gtc-from-human\">These jeans are made from 16/23 rusty dark wash denim and have strikingly strong abrasion with hand-crafted used effects.</span></span></p>\r\n<p><strong>100% organic cotton, 100% Fair Trade.</strong></p>\r\n"
+        },
+        {
+            "key": "Price",
+            "value": "89.9"
+        },
+        {
+            "key": "Price (gross)",
+            "value": "89.9"
+        },
+        {
+            "key": "Price (net)",
+            "value": "75.55"
+        },
+        {
+            "key": "Tax rate",
+            "value": "19"
+        },
+        {
+            "key": "Weight",
+            "value": "0"
+        },
+        {
+            "key": "Width",
+            "value": "0"
+        },
+        {
+            "key": "Height",
+            "value": "0"
+        },
+        {
+            "key": "Length",
+            "value": "0"
+        },
+        {
+            "key": "Quantity unit",
+            "value": ""
+        },
+        {
+            "key": "Quantity",
+            "value": "0"
+        }
+    ]
+}]

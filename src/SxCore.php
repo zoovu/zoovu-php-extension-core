@@ -3,6 +3,7 @@
 use Semknox\Core\Services\ApiClient;
 use Semknox\Core\Services\InitialUploadOverviewService;
 use Semknox\Core\Services\InitialUploadService;
+use Semknox\Core\Services\ProductUpdateService;
 use Semknox\Core\Services\SearchService;
 use Semknox\Core\Services\SearchSuggestionService;
 
@@ -21,6 +22,18 @@ class SxCore {
         }
 
         $this->config = $config;
+    }
+
+    /**
+     * Return the service to update one or a few (not all) products.
+     *
+     * @return ProductUpdateService
+     */
+    public function getProductUpdater()
+    {
+        $client = new ApiClient($this->config);
+
+        return new ProductUpdateService($client, $this->config);
     }
 
     /**

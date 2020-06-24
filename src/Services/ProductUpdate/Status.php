@@ -1,6 +1,6 @@
 <?php
 
-namespace Semknox\Core\Services\InitialUpload;
+namespace Semknox\Core\Services\ProductUpdate;
 
 
 class Status
@@ -267,6 +267,10 @@ class Status
         $file = $workingDirectory($this->statusFileName);
 
         $content = json_encode($this->data);
+
+        if(!is_dir(dirname($file))) {
+            mkdir(dirname($file));
+        }
 
         file_put_contents($file, $content);
     }

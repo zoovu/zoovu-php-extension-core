@@ -72,9 +72,15 @@ class SearchService {
      * @param string $sortName
      * @return SearchService
      */
-    public function sortBy($sortName)
+    public function sortBy($sortName, $direction=null)
     {
-        $this->client->setParam('sort', $sortName);
+        if($direction === null) {
+            $this->client->setParam('sort', $sortName);
+        }
+        else {
+            $sort = ['key' => $sortName, 'direction' => $direction];
+            $this->client->setParam('sortComplex', $sort);
+        }
 
         return $this;
     }

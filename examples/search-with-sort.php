@@ -21,7 +21,7 @@ $result   = $search->search();
 $sortingOptions = $result->getAvailableSortingOptions();
 
 foreach($sortingOptions as $option) {
-    echo $option->getName() . "<br>";
+    echo $option->getName() . ' - ' . $option->getKey() . ' - ' . $option->getSort() . "<br>";
 }
 
 echo '<br><br><hr><br>';

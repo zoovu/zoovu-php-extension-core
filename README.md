@@ -16,13 +16,27 @@ $configValues = [
     // required options
     'apiKey'    => '<your api key>',
     'projectId' => '<your projectId>',  
-    
-    // optional options
     'apiUrl' => 'https://dev-api-v3.semknox.com/',
-    'productTransformer' => \My\Shop\Semknox\ProductTransformer::class,
+
+    // optional options
+    
+    // update date is stored on the file system and then sent to Semknox bundled
+    // this config tells the core where to store the update data
+    // it is required if you plan to do an initial upload
     'storagePath'        => '/path/to/writable/directory',
-    'initialUploadBatchSize' => 200,
-    'initialUploadIdentifier' => 'default-store',
+    
+    // when this configuration is givem, an instance of this class will
+    // automatically try to convert the given product to a Semknox compatible format
+    // For more information check the section `Product transformer`    
+    'productTransformer' => \My\Shop\Semknox\ProductTransformer::class,
+    
+    // how many products to collect in one file / send in one request
+    'uploadBatchSize' => 2000,
+    
+    // how the directory to collect the products should be called
+    'storeIdentifier' => 'default',
+    
+    // how long (in seconds) a request should take before it gets aborted
     'requestTimeout' => 15
 ];
 
@@ -119,6 +133,22 @@ echo $uploader->getUploadingProgress(); // returns how much percent of products 
 echo $uploader->getTotalProgress(); // returns total progress (collecting is 90%, uploading 10%)
 
 echo $uploader->getRemainingTime(); // returns the expected remaining upload time in seconds
+~~~
+
+## Product updates
+
+Product updates work very similar to the initial upload. The difference here is that you do not need to initiate it with startCollecting(). When you add a product it collects that product update to a file. When you call startUploading() it will send all collected product updates to Semknox.   
+
+~~~php
+// collect products
+$updater = $sxCore->getProductUpdater();
+
+foreach($products as $product) {
+    $updater->addProduct($product);
+}
+
+// then send them as update
+$updater->sendUploadBatch();
 ~~~
 
  
