@@ -264,6 +264,14 @@ class Status
     {
         $workingDirectory = $this->workingDirectory;
 
+        // do nothing when status is completed and number of products is 0
+        $skipWriteToFile = ($this->getPhase() === self::PHASE_COMPLETED)
+                         &&($this->getNumberOfCollected() === 0);
+
+        if($skipWriteToFile) {
+            return;
+        }
+
         $file = $workingDirectory($this->statusFileName);
 
         $content = json_encode($this->data);
