@@ -65,7 +65,7 @@ class InitialUploadOverviewService
         foreach($directories as $directory) {
             $name = basename($directory);
 
-            preg_match('/^(.+?)-([0-9]{14})\.([A-Z]+?)$/i', $name, $matches);
+            preg_match('/^[0-9]+-(.+?)-(?:.?upload)-([0-9]{14})\.([A-Z]+?)$/i', $name, $matches);
 
             $identifier = $matches[1];
             $phase = $matches[3];
