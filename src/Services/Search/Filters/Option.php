@@ -57,7 +57,15 @@ class Option {
      */
     public function getKey()
     {
-        return $this->optionData['key'];
+        $key = isset($this->optionData['key'])
+            ? $this->optionData['key']
+            : null;
+
+        if($key) {
+            return $key;
+        }
+
+        return $this->optionData['conceptId'];
     }
 
     /**

@@ -9,9 +9,9 @@ $search = $sxCore->getSearch();
 
 $search = $search->query('*')
                  ->setLimit(200)
-//                 ->addFilter('Kategorie', ['Wakeboarding'])
-                 ->addFilter('Farbe', ['Blau'])
-//                 ->addFilter('Preis', [0, 10])
+                 ->addFilter('Kategorie', ['Wakeboarding'])
+//                 ->addFilter('Farbe', ['Blau'])
+//                 ->addFilter('Preis', [85, 93])
                  ->setUserGroup('1-De')
 ;
 
