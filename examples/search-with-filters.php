@@ -36,10 +36,11 @@ var_dump($result->getActiveFilters());
 echo '<hr><br><hr><br>';
 // multiselect , range
 
+echo 'available filters<br>';
 $filters = $result->getAvailableFilters();
 
 foreach($filters as $filter) {
-    echo $filter->getName() . ' ' . '<br>';
+    echo $filter->getName() . ' - ' . ($filter->isActive() ? 'aktiv' : 'inaktiv') . '<br>';
 
     foreach($filter->getOptions() as $option) {
         echo sprintf(' - %s (%d)<br>', $option->getName(), $option->getNumberOfResults());

@@ -48,17 +48,33 @@ abstract class SearchResultFactory
     {
         switch(strtoupper($filterData['type'])) {
             case 'TREE':
-                return new TreeFilter($filterData);
+                $filter = new TreeFilter($filterData);
+                break;
 
             case 'RANGE':
-                return new RangeFilter($filterData);
+                $filter = new RangeFilter($filterData);
+                break;
 
             case 'COLLECTION':
-                return new CollectionFilter($filterData);
+                $filter = new CollectionFilter($filterData);
+                break;
         }
 
-        $exceptionMessage = sprintf('Undefined filter type "%s" received.', $filterData['type']);
-        throw new LogicException($exceptionMessage);
+        if(!$filter) {
+            $exceptionMessage = sprintf('Undefined filter type "%s" received.', $filterData['type']);
+            throw new LogicException($exceptionMessage);
+        }
+
+        // set active or not
+        $activeFilterKeys = array_map(function($filter) {
+            return $filter['key'];
+        }, $activeFilters);
+
+        if(in_array($filter->getId(), $activeFilterKeys)) {
+            $filter->setActive(true);
+        }
+
+        return $filter;
     }
 
     /**
