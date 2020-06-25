@@ -15,13 +15,30 @@ class Option {
     protected $optionData;
 
     /**
+     * A list of
+     * @var
+     */
+    protected $isActive;
+
+    /**
      * Initialize an option.
      *
      * @param array $optionData
      */
-    public function __construct(array $optionData)
+    public function __construct(array $optionData, array $activeOptions=[])
     {
         $this->optionData = $optionData;
+        $this->optionData['active'] = false;
+
+        if($activeOptions) {
+            $activeOptionKeys = array_map(function($value) {
+                return $value['key'];
+            }, $activeOptions);
+
+            if(in_array($this->getKey(), $activeOptionKeys)) {
+                $this->setActive(true);
+            }
+        }
     }
 
     /**

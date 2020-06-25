@@ -18,7 +18,7 @@ class CollectionFilter extends AbstractFilter {
                'viewName' => $value['name'],
                'count'    => $value['count'],
                'children' => []
-           ]);
+           ], $this->getActiveOptions());
         }
 
         return $result;

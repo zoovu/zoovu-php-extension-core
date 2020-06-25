@@ -91,19 +91,8 @@ abstract class AbstractFilter {
         $concepts = $this->filterData['categories'];
         $result = [];
 
-        $activeOptions = $this->getActiveOptions();
-        $activeOptionKeys = array_map(function($value) {
-            return $value['key'];
-        }, $activeOptions);
-
         foreach($concepts as $concept) {
-            $option = new Option($concept);
-
-            if(in_array($option->getKey(), $activeOptionKeys)) {
-                $option->setActive(true);
-            }
-
-            $result[] = $option;
+            $result[] = new Option($concept, $this->getActiveOptions());
         }
 
         return $result;
