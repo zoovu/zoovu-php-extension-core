@@ -34,6 +34,15 @@ class Option {
     }
 
     /**
+     * Alias for $this->getId()
+     * @return mixed.
+     */
+    public function getKey()
+    {
+        return $this->getId();
+    }
+
+    /**
      * Return the name of the concept.
      * @return string
      */
@@ -88,5 +97,26 @@ class Option {
     public function hasChildren()
     {
         return (bool) $this->getChildrenFromApiResponse();
+    }
+
+    /**
+     * Return if this option is active. This property has been added by the Filter object (AbstractFilter).
+     *
+     * @param bool $active
+     * @return Option
+     */
+    public function setActive($active=true)
+    {
+        $this->optionData['active'] = $active;
+
+        return $this;
+    }
+
+    /**
+     * Return if this option is active. This property has been added by the Filter object (AbstractFilter).
+     */
+    public function isActive()
+    {
+        return (bool) $this->arrayGet($this->optionData, 'active', false);
     }
 }

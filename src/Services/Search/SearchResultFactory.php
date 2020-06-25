@@ -70,8 +70,9 @@ abstract class SearchResultFactory
             return $filter['key'];
         }, $activeFilters);
 
-        if(in_array($filter->getId(), $activeFilterKeys)) {
+        if(($key = array_search($filter->getId(), $activeFilterKeys)) !== false) {
             $filter->setActive(true);
+            $filter->setActiveOptions($activeFilters[$key]['values']);
         }
 
         return $filter;

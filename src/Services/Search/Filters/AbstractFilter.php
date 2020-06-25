@@ -45,11 +45,29 @@ abstract class AbstractFilter {
 
     /**
      * Set if this filter is active.
-     * @param $isActive
+     * @param bool $isActive
      */
     public function setActive($isActive)
     {
-        $this->filterData['active'] = (bool) $isActive;
+        $this->filterData['active'] = $isActive;
+    }
+
+    /**
+     * Set data for active options
+     * @param array $activeOptions
+     */
+    public function setActiveOptions($activeOptions)
+    {
+        $this->filterData['activeOptions'] = $activeOptions;
+    }
+
+    /**
+     * Return data for active options
+     * @return array
+     */
+    public function getActiveOptions()
+    {
+        return $this->filterData['activeOptions'];
     }
 
     /**
@@ -63,6 +81,8 @@ abstract class AbstractFilter {
             : false;
     }
 
+
+
     /**
      * Get all available options for this filter.
      */
@@ -71,8 +91,19 @@ abstract class AbstractFilter {
         $concepts = $this->filterData['categories'];
         $result = [];
 
+        $activeOptions = $this->getActiveOptions();
+        $activeOptionKeys = array_map(function($value) {
+            return $value['key'];
+        }, $activeOptions);
+
         foreach($concepts as $concept) {
-            $result[] = new Option($concept);
+            $option = new Option($concept);
+
+            if(in_array($option->getKey(), $activeOptionKeys)) {
+                $option->setActive(true);
+            }
+
+            $result[] = $option;
         }
 
         return $result;
