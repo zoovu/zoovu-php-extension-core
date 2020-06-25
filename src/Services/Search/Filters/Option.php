@@ -24,8 +24,9 @@ class Option {
      * Initialize an option.
      *
      * @param array $optionData
+     * @param array|null $activeOptions
      */
-    public function __construct(array $optionData, array $activeOptions=[])
+    public function __construct(array $optionData, $activeOptions=[])
     {
         $this->optionData = $optionData;
         $this->optionData['active'] = false;
