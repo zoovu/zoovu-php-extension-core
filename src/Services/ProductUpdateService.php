@@ -62,7 +62,10 @@ class ProductUpdateService extends ProductUpdateServiceAbstract {
      */
     public function sendUploadBatch()
     {
+        $this->productCollection->writeToFile();
+        $this->productCollection->clear();
         $file = $this->productCollection->nextFileToUpload();
+
         if(!$file) {
             return 0;
         }

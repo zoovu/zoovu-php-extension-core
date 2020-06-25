@@ -8,9 +8,9 @@ $jsonProducts = json_decode(file_get_contents('products_single.json'), true);
 $sxCore = makeSxCore();
 $updater = $sxCore->getProductUpdater();
 
-//foreach($jsonProducts as $product) {
-//    $updater->addProduct($product);
-//}
+foreach($jsonProducts as $product) {
+    $updater->addProduct($product);
+}
 
 
 $updater->sendUploadBatch();
