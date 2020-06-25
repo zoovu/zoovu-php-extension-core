@@ -8,11 +8,11 @@ $sxCore = makeSxCore();
 $search = $sxCore->getSearch();
 
 $search = $search->query('*')
-                 ->setLimit(100)
-                 ->addFilter('Kategorie', ['Wakeboarding'])
-//                 ->addFilter('Farbe', ['Black'])
+                 ->setLimit(200)
+//                 ->addFilter('Kategorie', ['Wakeboarding'])
+                 ->addFilter('Farbe', ['Blau'])
 //                 ->addFilter('Preis', [0, 10])
-                 ->setUserGroup('1-de')
+                 ->setUserGroup('1-De')
 ;
 
 echo 'Url: ' . $search->getRequestUrl() . "<br>";
@@ -40,7 +40,6 @@ echo '<hr><br><hr><br>';
 
 echo 'available filters<br>';
 $filters = $result->getAvailableFilters();
-var_dump($filters[0]);
 
 foreach($filters as $filter) {
     echo $filter->getName() . ' - ' . ($filter->isActive() ? 'aktiv' : 'inaktiv') . '<br>';

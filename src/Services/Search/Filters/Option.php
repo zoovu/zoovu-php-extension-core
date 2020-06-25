@@ -43,21 +43,21 @@ class Option {
     }
 
     /**
-     * Return the key for this filter
+     * Alias for $this->getId()
      * @return mixed.
      */
     public function getId()
     {
-        return $this->optionData['conceptId'];
+        return $this->getKey();
     }
 
     /**
-     * Alias for $this->getId()
+     * Return the key for this filter
      * @return mixed.
      */
     public function getKey()
     {
-        return $this->getId();
+        return $this->optionData['key'];
     }
 
     /**

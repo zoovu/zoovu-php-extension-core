@@ -1,7 +1,6 @@
 <?php namespace Semknox\Core\Services\Search\Filters;
 
 class CollectionFilter extends AbstractFilter {
-
     /**
      * Get all available options for this filter.
      */

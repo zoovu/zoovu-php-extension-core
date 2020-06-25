@@ -67,7 +67,9 @@ abstract class AbstractFilter {
      */
     public function getActiveOptions()
     {
-        return $this->filterData['activeOptions'];
+        return isset($this->filterData['activeOptions'])
+            ? $this->filterData['activeOptions']
+            : [];
     }
 
     /**
