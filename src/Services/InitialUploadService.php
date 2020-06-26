@@ -158,10 +158,12 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      * Signalizes Semknox that all product batches have been uploaded and sets status of this upload to "COMPLETED".
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function finalizeUpload()
+    public function finalizeUpload($signal = true)
     {
-        // when done change signal Semknox to start processing...
-        $this->client->request('POST', 'products/batch/start');
+        if($signal){
+            // when done change signal Semknox to start processing...
+            $this->client->request('POST', 'products/batch/start');
+        }
 
         // ..and change directory name to .COMPLETED
         $this->setPhaseTo(($this->status)::PHASE_COMPLETED);
