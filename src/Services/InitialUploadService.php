@@ -167,6 +167,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         // ..and change directory name to .COMPLETED
         $this->setPhaseTo(($this->status)::PHASE_COMPLETED);
+        $this->status->writeToFile(); // fixes not saving COMPLETED status
     }
 
     /**
