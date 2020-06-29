@@ -1,6 +1,7 @@
 {
     "name": "semknox/semknox-core",
     "description": "Core package to communicate with Semknox API",
+    "version": "3.0.0",
     "type": "library",
     "require": {
         "php": ">=5.6",
