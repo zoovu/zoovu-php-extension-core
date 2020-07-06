@@ -123,6 +123,8 @@ class ProductCollection {
         $workingDirectory = (string) $this->workingDirectory;
 
         $productFiles = glob($workingDirectory . '/upload-data_*.json');
+        
+        sort($productFiles, SORT_NATURAL);
 
         if(count($productFiles)) {
             $productFile = end($productFiles);
