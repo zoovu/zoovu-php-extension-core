@@ -115,9 +115,15 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             throw new \RuntimeException('Can not startUploading because current upload is not in phase "collecting"');
         }
 
-        $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
+        $response = $this->client->request('POST', 'products/batch/initiate');
 
-        $this->client->request('POST', 'products/batch/initiate');
+        // check if request was successfull before setting phase to uploading
+        if ($response['status'] == 'success') {
+            $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
+        }
+
+        return $response;
+        
     }
 
     /**
@@ -138,18 +144,25 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         $this->client->setParam('products', $products);
 
-        $this->client->request('POST', 'products/batch/upload');
+        $response = $this->client->request('POST', 'products/batch/upload');
 
-        $numberOfProducts = count($products);
+        // check if request was successfull before increase number of uploaded
+        if($response['status'] == 'success'){
 
-        $this->status->increaseNumberOfUploaded($numberOfProducts);
-        $this->status->writeToFile();
+            $numberOfProducts = count($products);
 
-        // rename file to .completed.
-        // Todo: this should not be done by this service
-        rename($file, str_replace('.json', '.uploaded.json', $file));
+            $this->status->increaseNumberOfUploaded($numberOfProducts);
+            $this->status->writeToFile();
 
-        return $numberOfProducts;
+            // rename file to .completed.
+            // Todo: this should not be done by this service
+            rename($file, str_replace('.json', '.uploaded.json', $file));
+
+            return $numberOfProducts;
+        }
+
+        return false; // attention: 0 !== false       
+        
     }
 
 
@@ -160,14 +173,23 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      */
     public function finalizeUpload($signal = true)
     {
+        $response['status'] = 'success';
+
         if($signal){
             // when done change signal Semknox to start processing...
-            $this->client->request('POST', 'products/batch/start');
+            $response = $this->client->request('POST', 'products/batch/start');
+
+            // check if request was successfull 
+            if ($response['status'] != 'success') {
+                return $response; // try again on next run!
+            }
         }
 
         // ..and change directory name to .COMPLETED
         $this->setPhaseTo(($this->status)::PHASE_COMPLETED);
         $this->status->writeToFile(); // fixes not saving COMPLETED status
+
+        return $response;
     }
 
     /**

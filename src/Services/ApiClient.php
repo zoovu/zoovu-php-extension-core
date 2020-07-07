@@ -149,9 +149,9 @@ class ApiClient
 
         $requestParams = $this->makeGuzzleRequestParams($method);
 
-//        var_dump('todo: '); var_dump($method); var_dump($uri); var_dump($requestParams); echo '<br>';
+		//var_dump('todo: '); var_dump($method); var_dump($uri); var_dump($requestParams); echo '<br>';
         $response = $this->client->request($method, $uri, $requestParams);
-//var_dump('done: '); var_dump($method); var_dump($uri); var_dump($requestParams); echo '<br><br>';
+		//var_dump('done: '); var_dump($method); var_dump($uri); var_dump($requestParams); echo '<br><br>';
 
 		$content = $response->getBody()->getContents();
 
@@ -179,16 +179,6 @@ class ApiClient
 			$this->client->setRawData(join('&', $body));
 		}
 
-
-		if($logRequest)
-		{
-			/* @var $helper Semknox_ProductSearch_Helper_Data */
-			$helper = Mage::helper('semknoxps');
-			$helper->log($this->client->getLastRequest());
-
-		}
-
-		return $request;
 	}
 
 
@@ -224,7 +214,7 @@ class ApiClient
 	public function getBackOfficeLoginUri()
 	{
 		if( ! $this->isAuthenticationSet()) {
-			$this->getApiCredentials();
+			//$this->getApiCredentials();
 		}
 
 		$uri   = self::LOGINBASE;
