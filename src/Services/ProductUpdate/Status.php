@@ -162,6 +162,8 @@ class Status
             throw new \RuntimeException('Invalid phase');
         }
 
+        $this->changed = true;
+
         $this->data['phase'] = $phase;
     }
 
@@ -174,6 +176,8 @@ class Status
     public function increaseNumberOfCollected($numCollected=1)
     {
         $this->data['collected'] += $numCollected;
+
+        $this->changed = true;
 
         return $this;
     }
@@ -209,6 +213,8 @@ class Status
     public function increaseNumberOfUploaded($numUploaded=1)
     {
         $this->data['uploaded'] += $numUploaded;
+
+        $this->changed = true;
 
         return $this;
     }
@@ -282,4 +288,37 @@ class Status
 
         file_put_contents($file, $content);
     }
+
+
+    /**
+     * set time to wait tp for next request.
+     * @return int
+     */
+    public function setTimeout()
+    {
+        if($this->isTimeoutActive()) return;
+
+        $timeToWait = 300; // 5 minutes, multiplicate with timout counter
+
+        $this->data['timeoutCounter'] = !isset($this->data['timeoutCounter']) ? 1 : $this->data['timeoutCounter']++;
+        $this->data['timeout'] = time() + ($timeToWait * $this->data['timeoutCounter']);
+
+        $this->changed = true;
+    }
+
+    /**
+     * check if timeout ist set
+     * @return int
+     */
+    public function isTimeoutActive()
+    {
+        $timeOutTo = isset($this->data['timeout']) ? (int) $this->data['timeout'] : 0;
+        return time() < $timeOutTo;
+    }
+
+    public function getNumberOfTimeouts()
+    {
+        return isset($this->data['timeoutCounter']) ? (int) $this->data['timeoutCounter'] : 0;
+    }
+
 }

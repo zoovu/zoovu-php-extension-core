@@ -1,5 +1,6 @@
 <?php namespace Semknox\Core\Services;
 
+use Exception;
 use Semknox\Core\Exceptions\LogicException;
 use Semknox\Core\Services\ProductUpdate\ProductCollection;
 use Semknox\Core\Services\ProductUpdate\Status;
@@ -39,8 +40,10 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $this->productCollection->writeToFile();
         }
 
-        // write status from memory to file
-        $this->status->writeToFile();
+        if($this->status->changed){
+            // write status from memory to file
+            $this->status->writeToFile();
+        }
     }
 
     /**
@@ -115,11 +118,19 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             throw new \RuntimeException('Can not startUploading because current upload is not in phase "collecting"');
         }
 
-        $response = $this->client->request('POST', 'products/batch/initiate');
+        if($this->isTimeoutActive()) return ['status' => 'success'];
+        try {
+            $response = $this->client->request('POST', 'products/batch/initiate');
+        } catch (Exception $e) {
+            $this->status->setTimeout();
+            throw new Exception($e->getMessage()); // to get a log entry
+        }
 
         // check if request was successfull before setting phase to uploading
         if ($response['status'] == 'success') {
             $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
+        } else {
+            $this->status->setTimeout();
         }
 
         return $response;
@@ -144,8 +155,14 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         $this->client->setParam('products', $products);
 
-        $response = $this->client->request('POST', 'products/batch/upload');
-
+        if ($this->isTimeoutActive()) return ['status' => 'success'];
+        try{
+            $response = $this->client->request('POST', 'products/batch/upload');
+        } catch (Exception $e){
+            $this->status->setTimeout();
+            throw new Exception($e->getMessage()); // to get a log entry
+        }
+    
         // check if request was successfull before increase number of uploaded
         if($response['status'] == 'success'){
 
@@ -159,6 +176,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             rename($file, str_replace('.json', '.uploaded.json', $file));
 
             return $numberOfProducts;
+        } else {
+            $this->status->setTimeout();
         }
 
         return false; // attention: 0 !== false       
@@ -177,12 +196,19 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         if($signal){
             // when done change signal Semknox to start processing...
-            $response = $this->client->request('POST', 'products/batch/start');
+            if ($this->isTimeoutActive()) return ['status' => 'success'];
+            try {
+                $response = $this->client->request('POST', 'products/batch/start');
+            } catch (Exception $e) {
+                $this->status->setTimeout();
+                throw new Exception($e->getMessage()); // to get a log entry
+            }
 
             // check if request was successfull 
             if ($response['status'] != 'success') {
                 return $response; // try again on next run!
-            }
+                $this->status->setTimeout();
+            } 
         }
 
         // ..and change directory name to .COMPLETED
@@ -215,5 +241,22 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         // change phase in status
         $this->status->setPhase($newPhase);
+    }
+
+
+    private function isTimeoutActive()
+    {
+        if($this->status->isTimeoutActive()){
+            return true;
+        }
+
+        // after 3 timeouts, ABORT!
+        if($this->status->getNumberOfTimeouts() > 3){
+            $this->abort();
+            return true;
+        }
+
+        return false;
+
     }
 }
