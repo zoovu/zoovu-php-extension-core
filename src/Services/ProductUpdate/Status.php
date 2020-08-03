@@ -199,6 +199,8 @@ class Status
     {
         $expected = $this->data['expectedNumberOfProducts'];
 
+        if($this->data['collected'] > $expected) return 100;
+
         return $expected
             ? round(($this->data['collected'] / $expected) * 100)
             : 0;
@@ -235,6 +237,8 @@ class Status
     public function getUploadingProgress()
     {
         $expected = $this->data['expectedNumberOfProducts'];
+
+        if($this->data['uploaded'] > $expected) return 100;
 
         return $expected
             ? round(($this->data['uploaded'] / $expected) * 100)
