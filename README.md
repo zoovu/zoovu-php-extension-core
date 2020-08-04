@@ -37,7 +37,13 @@ $configValues = [
     'storeIdentifier' => 'default',
     
     // how long (in seconds) a request should take before it gets aborted
-    'requestTimeout' => 15
+    'requestTimeout' => 15,
+
+    // deletes all completed initial uploads except for the last X ones
+    'keepCompletedUploads' => 5,
+
+    // deletes all aborted initial uploads except for the last X ones
+    'keepAbortedUploads' => 1
 ];
 
 $sxConfig = new \Semknox\Core\SxConfig($configValues);

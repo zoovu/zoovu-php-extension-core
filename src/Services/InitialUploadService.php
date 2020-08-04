@@ -188,34 +188,102 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
     /**
      * Signalizes Semknox that all product batches have been uploaded and sets status of this upload to "COMPLETED".
+     *
+     * @param $signal Signalize Semknox that upload is complete and they can start processing products.
+     * @param $cleanUp Remove old upload directories
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function finalizeUpload($signal = true)
+    public function finalizeUpload($signal = true, $cleanUp = true)
     {
         $response['status'] = 'success';
 
         if($signal){
-            // when done change signal Semknox to start processing...
-            if ($this->isTimeoutActive()) return ['status' => 'success'];
-            try {
-                $response = $this->client->request('POST', 'products/batch/start');
-            } catch (Exception $e) {
-                $this->status->setTimeout();
-                throw new Exception($e->getMessage()); // to get a log entry
-            }
-
-            // check if request was successfull 
-            if ($response['status'] != 'success') {
-                return $response; // try again on next run!
-                $this->status->setTimeout();
-            } 
+            $this->signalizeSemknoxToStartProcessing();
         }
 
         // ..and change directory name to .COMPLETED
         $this->setPhaseTo(($this->status)::PHASE_COMPLETED);
         $this->status->writeToFile(); // fixes not saving COMPLETED status
 
+        if($cleanUp) {
+            $this->cleanupOldUploadDirectories();
+        }
+
         return $response;
+    }
+
+    /**
+     * Signalize Semknox that the upload is completed and they can start processing the products.
+     *
+     * @return array|string[]
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function signalizeSemknoxToStartProcessing()
+    {
+        // when done change signal Semknox to start processing...
+        if ($this->isTimeoutActive()) return ['status' => 'success'];
+
+        try {
+            $response = $this->client->request('POST', 'products/batch/start');
+        } catch (Exception $e) {
+            $this->status->setTimeout();
+            throw new Exception($e->getMessage()); // to get a log entry
+        }
+
+        // check if request was successfull
+        if ($response['status'] != 'success') {
+            return $response; // try again on next run!
+            // $this->status->setTimeout();
+        }
+    }
+
+    /**
+     * Remove completed and aborted upload directories in storage path.
+     */
+    private function cleanupOldUploadDirectories()
+    {
+        $path = $this->config->getStoragePath() . '/'
+              . $this->config->getInitialUploadDirectoryIdentifier();
+
+        $keepCompleted = $this->config->getKeepLastCompletedUploads();
+        $keepAborted = $this->config->getKeepLastAbortedUploads();
+
+        $directoriesToClean = [
+            [$path . '-*.COMPLETED', $keepCompleted],
+            [$path . '-*.ABORTED', $keepAborted],
+        ];
+
+        foreach($directoriesToClean as $info) {
+            list($globPattern, $keep) = $info;
+
+            $directories = glob($globPattern);
+
+            if(count($directories) > $keep) {
+                // remove the last $keepCompleted directories
+                $directoriesToDelete = array_slice($directories, 0, -$keep);
+
+                foreach ($directoriesToDelete as $directory) {
+                    $this->removeDirectory($directory);
+                }
+            }
+        }
+    }
+
+    /**
+     * Removes a (non-empty) directory
+     * @param $directory
+     */
+    private function removeDirectory($directory)
+    {
+        $it = new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS);
+        $it = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach($it as $file) {
+            if ($file->isDir()) rmdir($file->getPathname());
+            else unlink($file->getPathname());
+        }
+
+        rmdir($directory);
     }
 
     /**
