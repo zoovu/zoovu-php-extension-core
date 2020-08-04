@@ -9,7 +9,7 @@ use Semknox\Core\SxConfig;
 
 
 /**
- * Class InitialUploadService. Handles collecting of products and upload to Semknox.
+ * Base class for collecting products and uploading date to Semknox.
  *
  * @package Semknox\Core\Services
  * @method bool isRunning()
@@ -55,7 +55,6 @@ abstract class ProductUpdateServiceAbstract {
      * @var Status
      */
     protected $status;
-
 
     /**
      * Products that are being collected.

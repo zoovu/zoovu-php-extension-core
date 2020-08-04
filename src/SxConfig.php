@@ -1,18 +1,51 @@
-<?php namespace Semknox\Core;
+<?php
+namespace Semknox\Core;
 
 
 use Semknox\Core\Exceptions\ConfigurationException;
 
-class SxConfig {
+class SxConfig
+{
 
     /**
+     * Define
      * @var array
      */
-    private $config;
+    private $config = [
+        // default config is defined here
+        'apiKey'               => '',
+        'projectId'            => '',
+        'apiUrl'               => 'https://dev-api-v3.semknox.com/',
+
+        // update date is stored on the file system and then sent to Semknox bundled
+        // this config tells the core where to store the update data
+        // it is required if you plan to do an initial upload
+        'storagePath'          => '',
+
+        // when this configuration is given, an instance of this class will
+        // automatically try to convert the given product to a Semknox compatible format
+        // For more information check the section `Product transformer`
+        'productTransformer'   => null,
+
+        // how many products to collect in one file / send in one request
+        'uploadBatchSize'      => 2000,
+
+        // how the directory to collect the products should be called
+        'storeIdentifier'      => 'default',
+
+        // how long (in seconds) a request should take before it gets aborted
+        'requestTimeout'       => 15,
+
+        // deletes all completed initial uploads except for the last X ones
+        'keepCompletedUploads' => 5,
+
+        // deletes all aborted initial uploads except for the last X ones
+        'keepAbortedUploads'   => 1
+    ];
 
     public function __construct(array $config)
     {
-        $this->config = $config;
+        $this->config = array_merge($this->config, $config);
     }
 
     /**
@@ -23,7 +56,7 @@ class SxConfig {
      *
      * @return mixed|null
      */
-    public function get($key, $default=null)
+    public function get($key, $default = null)
     {
         return isset($this->config[$key])
             ? $this->config[$key]
@@ -38,7 +71,7 @@ class SxConfig {
      */
     public function set(string $key, $value)
     {
-       $this->config[$key] = $value;
+        $this->config[$key] = $value;
     }
 
     /**
@@ -47,9 +80,9 @@ class SxConfig {
      * @param array $data The data to merge
      * @param array $whitelist An array of allowed $data keys.
      */
-    public function merge(array $data, array $whitelist=[])
+    public function merge(array $data, array $whitelist = [])
     {
-        if($whitelist) {
+        if ($whitelist) {
             $data = array_intersect_key($data, array_flip($whitelist));
         }
 
@@ -62,7 +95,7 @@ class SxConfig {
      */
     public function getApiUrl()
     {
-        return $this->get('apiUrl', 'https://dev-api-v3.semknox.com/');
+        return $this->get('apiUrl');
     }
 
     /**
@@ -71,7 +104,7 @@ class SxConfig {
      */
     public function getApiKey()
     {
-        return $this->get('apiKey', '');
+        return $this->get('apiKey');
     }
 
     public function getProjectId()
@@ -81,7 +114,7 @@ class SxConfig {
 
     public function getTimeout()
     {
-        return $this->get('requestTimeout', 15);
+        return $this->get('requestTimeout');
     }
 
     /**
@@ -90,7 +123,7 @@ class SxConfig {
      */
     public function getUploadBatchSize()
     {
-        return $this->get('uploadBatchSize', 2000);
+        return $this->get('uploadBatchSize');
     }
 
     /**
@@ -98,7 +131,7 @@ class SxConfig {
      */
     public function getStoreIdentifier()
     {
-        return $this->get('storeIdentifier', 'default');
+        return $this->get('storeIdentifier');
     }
 
     /**
@@ -107,7 +140,8 @@ class SxConfig {
      */
     public function getInitialUploadDirectoryIdentifier()
     {
-        return sprintf('%s-%s-initialupload',
+        return sprintf(
+            '%s-%s-initialupload',
             $this->getProjectId(),
             $this->getStoreIdentifier()
         );
@@ -119,7 +153,8 @@ class SxConfig {
      */
     public function getProductUpdateDirectoryIdentifier()
     {
-        return sprintf('%s-%s-productupload',
+        return sprintf(
+            '%s-%s-productupload',
             $this->getProjectId(),
             $this->getStoreIdentifier()
         );
@@ -142,13 +177,30 @@ class SxConfig {
     {
         $path = $this->get('storagePath');
 
-        if(!$path) {
+        if (!$path) {
             throw new ConfigurationException('Configuration for `storagePath` is missing.');
-        }
-        else if(!is_string($path)) {
+        } elseif (!is_string($path)) {
             throw new ConfigurationException('Configuration for `storagePath` has to be a string.');
         }
 
         return $path;
+    }
+
+    /**
+     * Return the number of previously completed uploads to keep. Older upload data will be deleted automatically.
+     * @return int
+     */
+    public function getKeepLastCompletedUploads()
+    {
+        return $this->get('keepCompletedUploads');
+    }
+
+    /**
+     * Return the number of aborted uploads to keep. Older uploads will be deleted automatically.
+     * @return mixed|null
+     */
+    public function getKeepLastAbortedUploads()
+    {
+        return $this->get('keepAbortedUploads');
     }
 }

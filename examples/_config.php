@@ -17,6 +17,10 @@ function makeSxCore()
         'apiKey'      => 'to7aor7o0k726h8hw5t7v8d4023j1g68',
         'projectId'   => 23,
         'apiUrl' => 'https://stage-oxid-v3.semknox.com',
+        //---------------------
+//        'apiKey'      => 'xhfct2949s3m16c174lwdepu75n71xoc',
+//        'projectId'   => 9,
+//        'apiUrl' => 'https://api-oxid-v3.semknox.com',
 
         // optional options
         //'productTransformer' => MagentoSemknoxProductTransformer::class,
