@@ -94,7 +94,8 @@ class SearchResponse
     }
 
     /**
-     * Return the number of total results for this search. If no $resultGroup is passed this will include products as well as content results.
+     * Return the number of total results for this search. This includes CONTENT and PRODUCT results. To return only the number of results for a specific resultGroup, pass the $resultGroup parameter. For example `->getTotalResults('products')` will return the number of product results.
+     *
      * @param null $resultGroup TotalResults of which resultGroup. If null it will return the number of results for all resultGroups combined.
      * @return mixed|null
      */
