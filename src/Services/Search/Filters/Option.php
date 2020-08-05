@@ -29,7 +29,10 @@ class Option {
     public function __construct(array $optionData, $activeOptions=[])
     {
         $this->optionData = $optionData;
-        $this->optionData['active'] = false;
+
+        if(!isset($this->optionData['active'])) {
+            $this->optionData['active'] = false;
+        }
 
         if($activeOptions) {
             $activeOptionKeys = array_map(function($value) {

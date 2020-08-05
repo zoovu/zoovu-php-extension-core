@@ -172,6 +172,23 @@ $products     = $response->getProducts();
 $answer       = $response->getAnswerText();
 ~~~
 
+## Product search with filters
+
+To add filters to your search you can use the `addFilter` method on the SearchService instance. Pass the exact name as the first parameter and the values you want to filter as an array as second parameter. For range filters (e.g. price) the min and max values should be given as an array as second argument. 
+
+~~~php
+$search = $sxCore->getSearch();
+
+// search() returns a SearchResponse
+$response = $search->query('ding')
+                   ->addFilter('Price', [50, 100])
+                   ->addFilter('Farbe', ['blau', 'rot'])
+                   ->search();
+
+$products     = $response->getProducts();
+~~~
+
+
 ## Search suggestions 
 
 ~~~php

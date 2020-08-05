@@ -67,7 +67,7 @@ class SearchResponse
      */
     public function getActiveFilters()
     {
-        return $this->get('activeFilterOptions');
+        return array_filter($this->get('activeFilterOptions'));
     }
 
     /**
