@@ -17,6 +17,11 @@ abstract class AbstractFilter {
     }
 
     /**
+     * Return the type of this filter.
+     */
+    abstract public function getType();
+
+    /**
      * Alias for $this->getKey()
      * @return mixed.
      */

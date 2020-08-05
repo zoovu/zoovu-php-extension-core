@@ -14,6 +14,14 @@ class RangeFilter extends AbstractFilter {
     protected $activeMax;
 
     /**
+     * @inheritDoc
+     */
+    public function getType()
+    {
+        return 'RANGE';
+    }
+
+    /**
      * Get all available options for this filter.
      */
     public function getOptions()
@@ -63,6 +71,15 @@ class RangeFilter extends AbstractFilter {
     }
 
     /**
+     * Get the currently set minimum for this filter. This is different from `getMin` if the filter is set. `getMin` will return the absolute range minimum, whereas `getActiveMin` will return the currently set minimum (which is greater or equal).
+     * @return mixed|flat
+     */
+    public function getActiveMin()
+    {
+        return $this->activeMin ?: $this->getMin();
+    }
+
+    /**
      * Get the range maximum
      * @return mixed
      */
@@ -70,4 +87,15 @@ class RangeFilter extends AbstractFilter {
     {
         return $this->filterData['max'];
     }
+
+    /**
+     * Get the currently set maximum for this filter. This is different from `getMin` if the filter is set. `getMin` will return the absolute range minimum, whereas `getActiveMin` will return the currently set minimum (which is greater or equal).
+     * @return mixed|flat
+     */
+    public function getActiveMax()
+    {
+        return $this->activeMax ?: $this->getMax();
+    }
+
+
 }

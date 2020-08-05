@@ -1,6 +1,11 @@
 <?php namespace Semknox\Core\Services\Search\Filters;
 
 class CollectionFilter extends AbstractFilter {
+    public function getType()
+    {
+        return 'COLLECTION';
+    }
+
     /**
      * Get all available options for this filter.
      */
@@ -22,4 +27,6 @@ class CollectionFilter extends AbstractFilter {
 
         return $result;
     }
+
+
 }
