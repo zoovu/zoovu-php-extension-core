@@ -8,10 +8,10 @@ $sxCore = makeSxCore();
 $search = $sxCore->getSearch();
 
 $search = $search->query('*')
-                 ->setLimit(200)
+//                 ->setLimit(200)
 //                 ->addFilter('Kategorie', ['Wakeboarding'])
 //                 ->addFilter('Farbe', ['Blau'])
-                 ->addFilter('Preis', [85, 93])
+                 ->addFilter('Preis (Netto)', [85, 93])
                  ->setUserGroup('1-De')
 ;
 

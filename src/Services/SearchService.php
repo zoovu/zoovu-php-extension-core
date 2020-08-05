@@ -44,14 +44,19 @@ class SearchService {
      */
     public function addFilter($name, $values)
     {
-        if(count($values) === 2 && count(array_filter($values, 'is_numeric')) === 2) {
+        $isRangeFilter = is_array($values)
+                         && count($values) === 2
+                         && count(array_filter($values, 'is_numeric')) === 2;
+
+        if($isRangeFilter) {
             $this->filters[] = [
                 'name' => $name,
-                'min' => min($values),
-                'max' => max($values)
+                'min' => (float) min($values),
+                'max' => (float) max($values)
             ];
         }
         else {
+            // convert each value to an array with key: "name"
             $values = array_map(function($value) {
                 return [
                     'name' => $value

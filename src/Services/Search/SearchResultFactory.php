@@ -72,7 +72,19 @@ abstract class SearchResultFactory
 
         if(($key = array_search($filter->getId(), $activeFilterKeys)) !== false) {
             $filter->setActive(true);
-            $filter->setActiveOptions($activeFilters[$key]['values']);
+
+            if(isset($activeFilters[$key]['values'])) {
+                $filter->setActiveOptions($activeFilters[$key]['values']);
+            }
+            else {
+                // range filter does not have ['values'] but ['min'] and ['max']
+                $filter->setActiveOptions([
+                    $activeFilters[$key]['min'],
+                    $activeFilters[$key]['max']
+                ]);
+
+            }
+
         }
 
         return $filter;
