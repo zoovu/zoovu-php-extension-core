@@ -56,10 +56,10 @@ class SearchService {
             ];
         }
         else {
-            // convert each value to an array with key: "name"
+            // convert each value to an array with key: "name" // 2020-08-118: now its the key "value"
             $values = array_map(function($value) {
                 return [
-                    'name' => $value
+                    'value' => $value
                 ];
             }, $values);
 
