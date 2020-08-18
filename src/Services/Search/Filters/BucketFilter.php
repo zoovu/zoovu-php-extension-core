@@ -18,8 +18,8 @@ class BucketFilter extends AbstractFilter {
             // convert key => value to concept format
             $result[] = new Option([
                'key'      => $value['value'],
-               'name'     => $value['value'],
-               'viewName' => $value['value'],
+               'name'     => $value['name'],
+               'value'    => $value['value'],
                'count'    => $value['count'],
                'children' => []
            ], $this->getActiveOptions());

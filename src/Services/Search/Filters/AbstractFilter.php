@@ -49,6 +49,15 @@ abstract class AbstractFilter {
     }
 
     /**
+     * Return the value of the filter.
+     * @return mixed.
+     */
+    public function getValue()
+    {
+        return $this->filterData['value'];
+    }
+
+    /**
      * Set if this filter is active.
      * @param bool $isActive
      */

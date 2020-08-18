@@ -39,7 +39,7 @@ class RangeFilter extends AbstractFilter {
             $result[] = new Option([
                 'key'      => $value,
                 'name'     => $value,
-                'viewName' => $value,
+                'value'     => $value,
                 'count'    => $count,
                 'active'   => $active,
                 'children' => []

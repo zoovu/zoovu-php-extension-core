@@ -36,10 +36,10 @@ class Option {
 
         if($activeOptions) {
             $activeOptionKeys = array_map(function($value) {
-                return $value['key'];
+                return $value['value'];
             }, $activeOptions);
-
-            if(in_array($this->getKey(), $activeOptionKeys)) {
+            
+            if(in_array($this->getValue(), $activeOptionKeys)) {
                 $this->setActive(true);
             }
         }
@@ -63,6 +63,17 @@ class Option {
         return isset($this->optionData['key'])
             ? $this->optionData['key']
             : $this->optionData['conceptId'];
+    }
+
+    /**
+     * Return the value for this filter
+     * @return mixed.
+     */
+    public function getValue()
+    {
+        return isset($this->optionData['value'])
+        ? $this->optionData['value']
+        : $this->optionData['name'];
     }
 
     /**

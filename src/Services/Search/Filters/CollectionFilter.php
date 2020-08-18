@@ -17,9 +17,9 @@ class CollectionFilter extends AbstractFilter {
         foreach($values as $value) {
             // convert key => value to concept format
             $result[] = new Option([
-               'key'      => $value['key'],
+               'key'      => $value['value'],
                'name'     => $value['name'],
-               'viewName' => $value['name'],
+               'value'    => $value['value'],
                'count'    => $value['count'],
                'children' => []
            ], $this->getActiveOptions());
