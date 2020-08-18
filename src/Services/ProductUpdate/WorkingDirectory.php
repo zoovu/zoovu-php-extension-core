@@ -27,6 +27,7 @@ class WorkingDirectory
     /**
      * When this class is invoked as a function.
      * @param $path
+     * @return string
      */
     public function __invoke($path)
     {
@@ -71,6 +72,7 @@ class WorkingDirectory
     /**
      * Rename te phase part of the current working directory
      * @param $newPhase
+     * @return
      */
     public function renamePhase($newPhase)
     {
@@ -80,5 +82,31 @@ class WorkingDirectory
         $newName = str_replace($currentPhase, '.' . $newPhase, $directoryName);
 
         return $this->rename($newName);
+    }
+
+    /**
+     * Get the phase from the directory name.
+     *
+     * @return false|string
+     */
+    public function getPhase()
+    {
+        $phaseWithDot = strrchr($this->workingDirectoryPath, '.');
+
+        if(!$phaseWithDot) {
+            return false;
+        }
+
+        return substr($phaseWithDot, 1);
+    }
+
+    /**
+     * Removes the current working directory and all files in it.
+     */
+    public function remove()
+    {
+        array_map('unlink', glob($this->workingDirectoryPath . "/*.*"));
+
+        rmdir($this->workingDirectoryPath);
     }
 }

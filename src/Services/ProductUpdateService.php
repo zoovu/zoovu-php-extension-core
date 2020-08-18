@@ -19,8 +19,11 @@ use Semknox\Core\SxConfig;
  * @package Semknox\Core\Services
  */
 class ProductUpdateService extends ProductUpdateServiceAbstract {
-
-
+    /**
+     * Skip incremental updates when an initial upload is ongoing
+     * @var bool
+     */
+    protected $skip = false;
 
     public function __construct(ApiClient $client, SxConfig $config)
     {
@@ -37,14 +40,44 @@ class ProductUpdateService extends ProductUpdateServiceAbstract {
         $this->productCollection = new ProductCollection($this->workingDirectory, [
             'maxSize' => $this->config->getUploadBatchSize()
         ]);
+
+        $this->skipIfInitialUploadExists();
     }
 
+    /**
+     * Check if there is a directory for a running initial upload for this
+     * shopId + storeIdentifier.
+     */
+    private function skipIfInitialUploadExists()
+    {
+        $initialUploadDir = WorkingDirectoryFactory::getLatest(
+            $this->config->getStoragePath(),
+            $this->config->getInitialUploadDirectoryIdentifier()
+        );
+
+        $skip = is_dir($initialUploadDir)
+                &&
+                in_array($initialUploadDir->getPhase(), [
+                    Status::PHASE_COLLECTING,
+                    Status::PHASE_UPLOADING
+                ]);
+
+        if($skip) {
+            $this->skip = true;
+
+            // remove all collected uploads, because
+            // everything will be submitted anyway with the initial upload
+            $this->workingDirectory->remove();
+        }
+    }
 
     /**
      * When the request is ended, permanent the collected products into the currently active file.
      */
     public function __destruct()
     {
+        if($this->skip) return;
+
         // permanent all collected products to file
         $this->productCollection->writeToFile();
     }
@@ -54,6 +87,8 @@ class ProductUpdateService extends ProductUpdateServiceAbstract {
      */
     public function addProduct($product, $parameters=[])
     {
+        if($this->skip) return;
+
         parent::addProduct($product, $parameters);
     }
 
@@ -62,6 +97,8 @@ class ProductUpdateService extends ProductUpdateServiceAbstract {
      */
     public function sendUploadBatch()
     {
+        if($this->skip) return;
+
         $this->productCollection->writeToFile();
         $this->productCollection->clear();
         $file = $this->productCollection->nextFileToUpload();
@@ -80,9 +117,8 @@ class ProductUpdateService extends ProductUpdateServiceAbstract {
 
         $numberOfProducts = count($products);
 
-        // rename file to .completed.
-        // Todo: this should not be done by this service
-        rename($file, str_replace('.json', '.uploaded.json', $file));
+        // delete the uploaded file
+        unlink($file);
 
         return $numberOfProducts;
     }

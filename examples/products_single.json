@@ -1,112 +1,430 @@
 [{
-    "identifier": "531a8af7d9a9a5bb53b65a2b9a5356e5",
+    "identifier": "5316bbab81c19d81d5e36e59ecd7f506",
     "groupIdentifier": "531f91d4ab8bfb24c4d04e473d246d0b",
-    "name": "UPDATED: Kuyichi Jeans KYLE",
-    "productUrl": "http://semknox-oxid.local/en/Gear/Fashion/For-Him/Jeans/Kuyichi-Jeans-KYLE-W-30-L-30-Schwarz.html",
+    "name": "Kuyichi Jeans KYLE",
+    "productUrl": "http://semknox-oxid.local/Bekleidung/Fashion/Fuer-Ihn/Jeans/Kuyichi-Jeans-KYLE-W-32-L-32-Blau.html",
     "categories": [
         {
             "path": [
-                "Gear",
+                "Bekleidung",
                 "Fashion",
-                "For Him",
+                "Für Ihn",
                 "Jeans"
             ]
         }
     ],
     "images": [
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/540_340_75/front_z1(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/540_340_75/front_z1(2)(1).jpg",
             "type": "SMALL"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/540_340_75/back_z2(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/540_340_75/back_z2(2)(1).jpg",
             "type": "SMALL"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/540_340_75/detail1_z3(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/540_340_75/detail1_z3(2)(1).jpg",
             "type": "SMALL"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/540_340_75/detail2_z4(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/540_340_75/detail2_z4(2)(1).jpg",
             "type": "SMALL"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/665_665_75/front_z1(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/665_665_75/front_z1(2)(1).jpg",
             "type": "LARGE"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/665_665_75/back_z2(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/665_665_75/back_z2(2)(1).jpg",
             "type": "LARGE"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/665_665_75/detail1_z3(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/665_665_75/detail1_z3(2)(1).jpg",
             "type": "LARGE"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/665_665_75/detail2_z4(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/665_665_75/detail2_z4(2)(1).jpg",
             "type": "LARGE"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/87_87_75/front_z1(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/1/87_87_75/front_z1(2)(1).jpg",
             "type": "THUMB"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/87_87_75/back_z2(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/2/87_87_75/back_z2(2)(1).jpg",
             "type": "THUMB"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/87_87_75/detail1_z3(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/3/87_87_75/detail1_z3(2)(1).jpg",
             "type": "THUMB"
         },
         {
-            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/87_87_75/detail2_z4(2).jpg",
+            "url": "http://semknox-oxid.local/out/pictures/generated/product/4/87_87_75/detail2_z4(2)(1).jpg",
             "type": "THUMB"
         }
     ],
     "attributes": [
         {
-            "key": "Description",
-            "value": "<p><span id=\"goog-gtc-unit-2\" class=\"goog-gtc-unit\"><span dir=\"ltr\" class=\"goog-gtc-translatable goog-gtc-from-human\">Stylish and slim men's jeans from Kuyichi.&nbsp;</span></span><span id=\"goog-gtc-unit-3\" class=\"goog-gtc-unit\"><span dir=\"ltr\" class=\"goog-gtc-translatable goog-gtc-from-human\">Narrow low boot cut Jeans with straight legs.&nbsp;</span></span><span id=\"goog-gtc-unit-4\" class=\"goog-gtc-unit\"><span dir=\"ltr\" class=\"goog-gtc-translatable goog-gtc-from-human\">These jeans are made from 16/23 rusty dark wash denim and have strikingly strong abrasion with hand-crafted used effects.</span></span></p>\r\n<p><strong>100% organic cotton, 100% Fair Trade.</strong></p>\r\n"
+            "key": "interne ID",
+            "value": "5316bbab81c19d81d5e36e59ecd7f506",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Price",
-            "value": "89.9"
+            "key": "Shop-ID",
+            "value": "1",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Price (gross)",
-            "value": "89.9"
+            "key": "ID des Elternartikels",
+            "value": "531f91d4ab8bfb24c4d04e473d246d0b",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Price (net)",
-            "value": "75.55"
+            "key": "Artikelnummer",
+            "value": "0601-85-069-8-1",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Tax rate",
-            "value": "19"
+            "key": "Titel",
+            "value": "Kuyichi Jeans KYLE",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Weight",
-            "value": "0"
+            "key": "Kurzbeschreibung",
+            "value": "Schmale Low Boot Jeans mit geradem Beinschnitt",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Width",
-            "value": "0"
+            "key": "Preis",
+            "value": "89.9 EUR",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Height",
-            "value": "0"
+            "key": "Preis A",
+            "value": "0 EUR",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Length",
-            "value": "0"
+            "key": "Preis B",
+            "value": "0 EUR",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Quantity unit",
-            "value": ""
+            "key": "Preis C",
+            "value": "0 EUR",
+            "userGroups": [
+                "99-Test"
+            ]
         },
         {
-            "key": "Quantity",
-            "value": "0"
+            "key": "Bruttopreis",
+            "value": "89.9 EUR",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Alter Preis",
+            "value": "0 EUR",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Menge",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Steuersatz",
+            "value": "19",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Vorschaubild",
+            "value": "thumb_th(2)_th.jpg",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Bild 1",
+            "value": "front_z1(2)(1).jpg",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Bild 2",
+            "value": "back_z2(2)(1).jpg",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Bild 3",
+            "value": "detail1_z3(2)(1).jpg",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Bild 4",
+            "value": "detail2_z4(2)(1).jpg",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Gewicht",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Lagerbestand",
+            "value": "5",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Lieferstatus",
+            "value": "1",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Angelegt am",
+            "value": "2009-12-14",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Letzte Änderung",
+            "value": "2020-04-21 11:50:35",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Länge",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Breite",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Höhe",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Suchbegriffe",
+            "value": "jeans,kuyichi,modisch,dunkel",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Artikel ist individualisierbar",
+            "value": "false",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Name der Variante",
+            "value": "Größe | Farbe",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Varianten Lagerbestand",
+            "value": "5",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Anzahl der Varianten",
+            "value": "24",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Sortierung",
+            "value": "13001",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Verkaufte Anzahl",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Immateriell",
+            "value": "false",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Versandkostenfrei",
+            "value": "false",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Lieferanten-ID",
+            "value": "a57c56e3ba710eafb2225e98f058d989",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Bewertung",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Bewertung Anzahl",
+            "value": "0",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Min. Lieferzeit",
+            "value": "1",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Max. Lieferzeit",
+            "value": "2",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Lieferzeit Einheit",
+            "value": "DAY",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "dabsimagedir",
+            "value": "/var/www/semknox-oxid/source/out/pictures/",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "nossl_dimagedir",
+            "value": "http://semknox-oxid.local/out/pictures/",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "ssl_dimagedir",
+            "value": "http://semknox-oxid.local/out/pictures/",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Beschreibung",
+            "value": "Die modische und schmale Herrenjeans von Kuyichi. Schmale  Low Boot\r\nJeans mit geradem Beinschnitt. Gefertigt ist die Jeans aus 16/23 Rusty\r\nDenim in dunkler Waschung mit markant starkem Abrieb und aufwändig, von\r\nHand gearbeiteten Used-Effekten.<br />\r\n<br /><strong>100% ökologisch angebaute Baumwolle, 100% Fair Trade.</strong><br />\r\n<br />",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Preis (Netto)",
+            "value": "75.55 EUR",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Größe",
+            "value": "W 32/L 32",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Farbe",
+            "value": "Blau",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Hersteller",
+            "value": "Kuyichi",
+            "userGroups": [
+                "99-Test"
+            ]
+        },
+        {
+            "key": "Hersteller",
+            "value": "Kuyichi",
+            "userGroups": [
+                "99-Test"
+            ]
         }
-    ]
+    ],
+    "settings": {
+        "includeUserGroups": [
+            "99-Test"
+        ]
+    }
 }]

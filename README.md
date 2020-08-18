@@ -143,7 +143,7 @@ echo $uploader->getRemainingTime(); // returns the expected remaining upload tim
 
 ## Product updates
 
-Product updates work very similar to the initial upload. The difference here is that you do not need to initiate it with startCollecting(). When you add a product it collects that product update to a file. When you call startUploading() it will send all collected product updates to Semknox.   
+Product updates work very similar to the initial upload. The difference here is that you do not need to initiate it with startCollecting(). When you add a product it collects that product update to a file. When you call sendUploadBatch() it will send all collected product updates to Semknox.   
 
 ~~~php
 // collect products
