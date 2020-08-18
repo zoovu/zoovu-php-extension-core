@@ -26,7 +26,9 @@ function makeSxCore()
         //'productTransformer' => MagentoSemknoxProductTransformer::class,
 
         'storagePath'        => __DIR__ . '/tmp',
-        'requestTimeout' => 30
+        'requestTimeout' => 30,
+
+        'uploadBatchSize' => 150,
     ];
 
     $sxConfig = new \Semknox\Core\SxConfig($config);

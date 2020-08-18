@@ -9,7 +9,8 @@ use Semknox\Core\SxConfig;
 
 
 /**
- * Base class for collecting products and uploading date to Semknox.
+ * Base class for collecting and uploading products to Semknox.
+ * This is used by ProductUpdateService (incremental updates)
  *
  * @package Semknox\Core\Services
  * @method bool isRunning()
