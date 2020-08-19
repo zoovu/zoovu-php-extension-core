@@ -77,6 +77,17 @@ class Option {
     }
 
     /**
+     * Return the unit for this filter
+     * @return mixed.
+     */
+    public function getUnit()
+    {
+        return isset($this->optionData['unit'])
+        ? $this->optionData['unit']
+        : '';
+    }
+
+    /**
      * Return the name of the concept.
      * @return string
      */

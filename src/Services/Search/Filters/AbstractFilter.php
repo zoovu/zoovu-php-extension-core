@@ -40,6 +40,17 @@ abstract class AbstractFilter {
     }
 
     /**
+     * Return the unit for this filter
+     * @return mixed.
+     */
+    public function getUnit()
+    {
+        return isset($this->filterData['unit'])
+        ? $this->filterData['unit']
+        : '';
+    }
+
+    /**
      * Return the name of the filter.
      * @return mixed.
      */

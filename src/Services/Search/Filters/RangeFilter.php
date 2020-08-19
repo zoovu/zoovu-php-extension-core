@@ -26,6 +26,8 @@ class RangeFilter extends AbstractFilter {
      */
     public function getOptions()
     {
+        $unit = isset($this->filterData['unit']) ? $this->filterData['unit'] : '';
+
         $counts = $this->filterData['counts'];
         $result = [];
 
@@ -42,6 +44,7 @@ class RangeFilter extends AbstractFilter {
                 'value'     => $value,
                 'count'    => $count,
                 'active'   => $active,
+                'unit'     => $unit,
                 'children' => []
             ]);
         }
