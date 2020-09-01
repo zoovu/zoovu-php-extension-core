@@ -304,7 +304,7 @@ class Status
 
         $timeToWait = 300; // 5 minutes, multiplicate with timout counter
 
-        $this->data['timeoutCounter'] = !isset($this->data['timeoutCounter']) ? 1 : $this->data['timeoutCounter']++;
+        $this->data['timeoutCounter'] = !isset($this->data['timeoutCounter']) ? 1 : ++$this->data['timeoutCounter'];
         $this->data['timeout'] = time() + ($timeToWait * $this->data['timeoutCounter']);
 
         $this->changed = true;

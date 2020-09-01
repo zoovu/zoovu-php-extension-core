@@ -142,8 +142,10 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      * @return int The number of products sent in this batch.
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendUploadBatch()
+    public function sendUploadBatch($returnFullResponse = false)
     {
+        $response = [];
+
         $file = $this->productCollection->nextFileToUpload();
         if(!$file) {
             return 0;
@@ -180,7 +182,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $this->status->setTimeout();
         }
 
-        return false; // attention: 0 !== false       
+        return $returnFullResponse ? $response : false; // attention: 0 !== false       
         
     }
 
