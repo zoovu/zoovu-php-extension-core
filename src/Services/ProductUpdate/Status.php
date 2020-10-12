@@ -15,6 +15,8 @@ class Status
 
     private $statusFileName = 'info.json';
 
+    private $lockFileName = '_upload.lock';
+
     /**
      * @var WorkingDirectory
      */
@@ -27,11 +29,17 @@ class Status
     protected $data;
 
     /**
+     * Has status changed anyhow.
+     * @var bool
+     */
+    public $changed;
+
+    /**
      * InitialUploadStatus constructor.
      *
      * @param array $status Status information
      */
-    public function __construct(WorkingDirectory &$workingDirectory, array $config=[])
+    public function __construct(WorkingDirectory $workingDirectory, array $config=[])
     {
         $this->workingDirectory = $workingDirectory;
 
@@ -325,4 +333,37 @@ class Status
         return isset($this->data['timeoutCounter']) ? (int) $this->data['timeoutCounter'] : 0;
     }
 
+
+    private function getLockFilePath()
+    {
+        return $this->workingDirectory->getPath($this->lockFileName);
+    }
+    /**
+     * Write lock
+     */
+    public function setLock()
+    {
+        file_put_contents($this->getLockFilePath(), time());
+    }
+
+    public function hasLock()
+    {
+        $filePath = $this->getLockFilePath();
+
+        if(!file_exists($filePath)) {
+            return false;
+        }
+
+        // lock is older than 30 seconds
+        if(file_get_contents($filePath) < (time() - 30)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function removeLock()
+    {
+        unlink($this->getLockFilePath());
+    }
 }

@@ -31,7 +31,7 @@ class WorkingDirectory
      */
     public function __invoke($path)
     {
-        return $this->workingDirectoryPath . '/' . $path;
+        return $this->getPath($path);
     }
 
 
@@ -40,9 +40,9 @@ class WorkingDirectory
      *
      * @return string
      */
-    public function getPath()
+    public function getPath($path = '')
     {
-        return $this->workingDirectoryPath;
+        return $this->workingDirectoryPath . '/' . $path;
     }
 
 

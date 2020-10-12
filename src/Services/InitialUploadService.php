@@ -27,11 +27,19 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         );
 
         $this->init();
+
+        if($this->status->hasLock()) {
+            throw new \Exception('Can not create a second InitialUploadService instance while uploading is in progress.');
+        }
+
+        if($this->status->isUploading()) {
+            $this->status->setLock();
+        }
     }
 
 
     /**
-     * When the request is ended, permanent the collcted products into the currently active file.
+     * When the request is ended, permanent the collected products into the currently active file.
      */
     public function __destruct()
     {
@@ -44,10 +52,12 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             // write status from memory to file
             $this->status->writeToFile();
         }
+
+        $this->status->removeLock();
     }
 
     /**
-     * Pass through status methods (isRunning(), is Stopped())
+     * Pass through status methods (isRunning(), isStopped())
      */
     public function __call($method, $args)
     {
@@ -119,6 +129,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         }
 
         if($this->isTimeoutActive()) return ['status' => 'success'];
+
         try {
             $response = $this->client->request('POST', 'products/batch/initiate');
         } catch (Exception $e) {
@@ -134,7 +145,6 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         }
 
         return $response;
-        
     }
 
     /**
@@ -165,7 +175,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             throw new Exception($e->getMessage()); // to get a log entry
         }
     
-        // check if request was successfull before increase number of uploaded
+        // check if request was successful before increasing number of uploaded
         if($response['status'] == 'success'){
 
             $numberOfProducts = count($products);
@@ -182,8 +192,9 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $this->status->setTimeout();
         }
 
-        return $returnFullResponse ? $response : false; // attention: 0 !== false       
-        
+        // todo: throw exception on error instead of returning false
+        //       that way we don't have to differentiate between 0 and false
+        return $returnFullResponse ? $response : false; // attention: 0 !== false
     }
 
 

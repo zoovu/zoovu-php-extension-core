@@ -7,13 +7,19 @@ require __DIR__ . '/_config.php';
 $jsonProducts = json_decode(file_get_contents('products.json'), true);
 //$jsonProducts = [];
 
-$sxCore = makeSxCore();
-$uploader = $sxCore->getInitialUploader();
+try {
+    $sxCore = makeSxCore();
+    $uploader = $sxCore->getInitialUploader();
+}
+catch(\Semknox\Core\Exceptions\DuplicateInstantiationException $e) {
+    // do not continue uploading in this request
+    return;
+}
 
 // start a new upload (start collecting products)
 if($uploader->isStopped()) {
     $uploader->startCollecting([
-        'expectedNumberOfProducts' => count($jsonProducts)
+        'expectedNumberOfProducts' => 4 //count($jsonProducts)
     ]);
 }
 
@@ -27,7 +33,7 @@ if($uploader->isCollecting()) {
     $uploader->startUploading();
 }
 
-
+//
 if($uploader->isUploading()) {
     // send product batches to semknox
     //do {

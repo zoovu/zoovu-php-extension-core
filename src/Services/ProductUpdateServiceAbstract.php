@@ -121,7 +121,7 @@ abstract class ProductUpdateServiceAbstract {
 
 
     /**
-     * Send a single product batch to semknox for processing. Returns the the number of products uploaded in this batch.
+     * Send a single product batch to semknox for processing. Returns the number of products uploaded in this batch.
      * @return int The number of products sent in this batch.
      * @throws \GuzzleHttp\Exception\GuzzleException
      */

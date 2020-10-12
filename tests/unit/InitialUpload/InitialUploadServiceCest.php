@@ -5,14 +5,13 @@
  * @created 2020-05-15
  */
 
-use Helper\UnitTester;
 use Semknox\Core\Services\InitialUploadService;
 
 class InitialUploadServiceCest
 {
     protected $initialUpload;
 
-    public function before(UnitTester $I)
+    public function _before(UnitTester $I)
     {
         // instantiate $initalUpload
         $core = $I->getSxCore();
@@ -20,8 +19,13 @@ class InitialUploadServiceCest
         $this->initialUpload = $core->getInitialUploader();
     }
 
-    public function testType()
+    public function testType(UnitTester $I)
     {
-        $this->assertInstanceOf(InitialUploadService::class, $this->initialUpload);
+        $I->assertInstanceOf(InitialUploadService::class, $this->initialUpload);
+    }
+
+    public function test()
+    {
+        
     }
 }
