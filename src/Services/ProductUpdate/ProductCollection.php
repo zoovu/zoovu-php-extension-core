@@ -164,7 +164,11 @@ class ProductCollection {
     {
         $pattern = (string) $this->workingDirectory . '/upload-data_*.json';
 
-        return glob($pattern);
+        $files = glob($pattern);
+
+        natsort($files);
+
+        return $files;
     }
 
     /**
