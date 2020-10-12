@@ -19,7 +19,7 @@ catch(\Semknox\Core\Exceptions\DuplicateInstantiationException $e) {
 // start a new upload (start collecting products)
 if($uploader->isStopped()) {
     $uploader->startCollecting([
-        'expectedNumberOfProducts' => 4 //count($jsonProducts)
+        'expectedNumberOfProducts' => count($jsonProducts)
     ]);
 }
 

@@ -1,6 +1,7 @@
 <?php namespace Semknox\Core\Services;
 
 use Exception;
+use Semknox\Core\Exceptions\DuplicateInstantiationException;
 use Semknox\Core\Exceptions\LogicException;
 use Semknox\Core\Services\ProductUpdate\ProductCollection;
 use Semknox\Core\Services\ProductUpdate\Status;
@@ -29,7 +30,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         $this->init();
 
         if($this->status->hasLock()) {
-            throw new \Exception('Can not create a second InitialUploadService instance while uploading is in progress.');
+            throw new DuplicateInstantiationException('Can not create a second InitialUploadService instance while uploading is in progress.');
         }
 
         if($this->status->isUploading()) {
