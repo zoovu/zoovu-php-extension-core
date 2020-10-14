@@ -107,6 +107,8 @@ class WorkingDirectory
     {
         array_map('unlink', glob($this->workingDirectoryPath . "/*.*"));
 
-        rmdir($this->workingDirectoryPath);
+        if(is_dir($this->workingDirectoryPath)){
+            rmdir($this->workingDirectoryPath);
+        }
     }
 }

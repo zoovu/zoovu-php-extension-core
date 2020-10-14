@@ -364,6 +364,8 @@ class Status
 
     public function removeLock()
     {
-        unlink($this->getLockFilePath());
+        if(file_exists($this->getLockFilePath())){
+            unlink($this->getLockFilePath());
+        }
     }
 }
