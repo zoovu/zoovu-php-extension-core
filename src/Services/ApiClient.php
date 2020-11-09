@@ -159,26 +159,6 @@ class ApiClient
         $this->params = [];
 
 		return json_decode($content, true);
-
-
-		// TODO: check if any of that is still needed
-		if(in_array(strtolower($method), array('get', 'delete'))) {
-			$this->client->setParameterGet($this->params);
-		}
-		else {
-			$body = array();
-			foreach ( $this->params as $name => $value ) {
-				if(is_array($value)) {
-					$value = urlencode(json_encode($value));
-				}
-
-				$body[] = $name . '=' . $value;
-			}
-
-			$this->client->setHeaders('Content-Type', $this->_contentType);
-			$this->client->setRawData(join('&', $body));
-		}
-
 	}
 
 

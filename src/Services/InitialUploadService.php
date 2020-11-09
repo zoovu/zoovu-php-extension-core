@@ -5,8 +5,8 @@ use Semknox\Core\Exceptions\DuplicateInstantiationException;
 use Semknox\Core\Exceptions\LogicException;
 use Semknox\Core\Services\ProductUpdate\ProductCollection;
 use Semknox\Core\Services\ProductUpdate\Status;
-use Semknox\Core\Services\ProductUpdate\WorkingDirectory;
 use Semknox\Core\Services\ProductUpdate\WorkingDirectoryFactory;
+use Semknox\Core\Services\Traits\LockTrait;
 use Semknox\Core\SxConfig;
 
 
@@ -15,8 +15,21 @@ use Semknox\Core\SxConfig;
  */
 class InitialUploadService extends ProductUpdateServiceAbstract {
 
+    use LockTrait;
+
+    /**
+     * InitialUploadService constructor.
+     *
+     * @param ApiClient $client
+     * @param SxConfig $config
+     *
+     * @throws DuplicateInstantiationException
+     * @throws \Semknox\Core\Exceptions\ConfigurationException
+     */
     public function __construct(ApiClient $client, SxConfig $config)
     {
+        $this->handleLock($config->getStoragePath(), $config->getInitialUploadDirectoryIdentifier());
+
         parent::__construct(
             $client,
             $config
@@ -28,14 +41,21 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         );
 
         $this->init();
+    }
 
-        if($this->status->hasLock()) {
+    /**
+     * Check if a lockfile already exists and throw an exception if so. If no lock file exists it creates the lock file.
+     * @throws DuplicateInstantiationException
+     */
+    private function handleLock($storagePath, $initialUploadIdentifier)
+    {
+        $this->setLockFilePath($storagePath . '/' . $initialUploadIdentifier . '.lock');
+
+        if($this->hasLock()) {
             throw new DuplicateInstantiationException('Can not create a second InitialUploadService instance while uploading is in progress.');
         }
 
-        if($this->status->isUploading()) {
-            $this->status->setLock();
-        }
+        $this->setLock();
     }
 
 
@@ -54,7 +74,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $this->status->writeToFile();
         }
 
-        $this->status->removeLock();
+        $this->removeLock();
     }
 
     /**
