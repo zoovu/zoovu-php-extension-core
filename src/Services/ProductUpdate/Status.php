@@ -15,8 +15,6 @@ class Status
 
     private $statusFileName = 'info.json';
 
-    private $lockFileName = '_upload.lock';
-
     /**
      * @var WorkingDirectory
      */

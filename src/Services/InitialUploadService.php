@@ -45,6 +45,10 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
     /**
      * Check if a lockfile already exists and throw an exception if so. If no lock file exists it creates the lock file.
+     *
+     * @param string $storagePath Path to the directory where all directories are stored.
+     * @param string $initialUploadIdentifier Identifier for this shop.
+     *
      * @throws DuplicateInstantiationException
      */
     private function handleLock($storagePath, $initialUploadIdentifier)
