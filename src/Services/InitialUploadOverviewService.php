@@ -67,10 +67,10 @@ class InitialUploadOverviewService
 
             preg_match('/^[0-9]+-(.+?)-initialupload-([0-9]{14})\.([A-Z]+?)$/i', $name, $matches);
 
-            $identifier = $matches[1];
-            $phase = $matches[3];
+            $identifier = isset($matches[1]) ? $matches[1] : false;
+            $phase = isset($matches[3]) ? $matches[3] : false;
 
-            if($phase && in_array($phase, $runningPhases)) {
+            if($identifier && $phase && in_array($phase, $runningPhases)) {
                 $workingDirectory = new WorkingDirectory($directory);
 
                 $status = new Status($workingDirectory);
