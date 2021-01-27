@@ -142,17 +142,28 @@ class SearchResponse
     public function getResults($groupType, $flattened=false)
     {
         $return = [];
+        $results = $this->getResultGroup($groupType, 'results');
 
-        $products = $this->getResultGroup($groupType, 'results');
+        $resultFactory = ($groupType == 'products') ? 'getProduct' : 'getContent';
 
-        foreach($products as $items) {
-            if($flattened) {
-                foreach($items as $item) {
-                    $return[] = SearchResultFactory::getProduct([$item]);
+        foreach($results as $items) {
+
+            if($groupType == 'products'){
+                
+                if($flattened) {
+                    foreach($items as $item) {
+                        $return[] = SearchResultFactory::$resultFactory([$item]);
+                    }
                 }
-            }
-            else {
-                $return[] = SearchResultFactory::getProduct($items);
+                else {
+                    $return[] = SearchResultFactory::$resultFactory($items);
+                }
+
+            } else {
+
+                // custom type
+                $return = array_merge($return, SearchResultFactory::$resultFactory($items));
+
             }
         }
 
@@ -167,20 +178,33 @@ class SearchResponse
      */
     private function getResultGroup($groupType, $key=null)
     {
+        $return = [];
+
         foreach($this->get('searchResults') as $searchResult) {
+
             if($searchResult['type'] === $groupType) {
                 if(!$key) {
-                    return $searchResult;
+
+                    if($groupType == 'products'){
+                        return $searchResult;
+                    } 
+
+                    $return[] = $searchResult;
                 }
                 else {
-                    return isset($searchResult[$key])
-                        ? $searchResult[$key]
-                        : [];
+
+                    if ($groupType == 'products'){
+                        return isset($searchResult[$key]) ? $searchResult[$key] : [];
+                    }
+
+                    $return[] = $searchResult;
+                    
                 }
             }
+
         }
 
-        return [];
+        return $return;
     }
 
 

@@ -41,6 +41,23 @@ abstract class SearchResultFactory
         }
     }
 
+
+    /**
+     * Get a instance of Content\Custom
+     * @param $contentData
+     * @return Content
+     */
+    public static function getContent($sectionData)
+    {
+        $content = [];
+
+        foreach ($sectionData['results'] as $item) {
+            $content[] = new Content($sectionData, $item);
+        }
+
+        return $content;
+    }
+
     /**
      * Create a filter object.
      * @param array $filterData
