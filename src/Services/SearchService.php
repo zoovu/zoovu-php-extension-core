@@ -150,8 +150,6 @@ class SearchService {
         return $this->client->getRequestUrl('search');
     }
 
-
-
     /**
      * Set additional parameters before submitting the search.
      *
@@ -162,5 +160,8 @@ class SearchService {
         $this->client->setParam('limit', $this->limit);
 
         $this->client->setParam('filters', json_encode($this->filters));
+
+        // user sessionid, requirement from Feb 2021
+        $this->client->setParam('sessionId', session_id());
     }
 }

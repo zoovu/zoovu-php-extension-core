@@ -34,6 +34,12 @@ class ApiClient
 	 */
 	protected $params = [];
 
+    /**
+     * Configuration values
+     * @var SxConfig
+     */
+    protected $config;
+
 	/**
 	 * The client to be used
 	 * @var Client
@@ -61,6 +67,8 @@ class ApiClient
 
 	public function __construct(SxConfig $config)
 	{
+	    $this->config = $config;
+
 	    $this->apiBaseUrl = $config->getApiUrl();
 
 		$this->client = new Client([
@@ -308,6 +316,32 @@ class ApiClient
             $guzzleParams['json'] = $this->params;
         }
 
+        // Feb 2021: additional extension and client information
+        $guzzleParams['headers'] = [
+            'HTTP_CLIENT_IP' => $this->getClientIp(),
+            'SHOPSYS'        => $this->config->getShopsystem(),
+            'SHOPSYSVER'     => $this->config->getShopsystemVersion(),
+            'EXTVER'         => $this->config->getExtensionVersion(),
+        ];
+
         return $guzzleParams;
+    }
+
+    /**
+     * Return the IP address for the client
+     */
+    private function getClientIp()
+    {
+        $ip = null;
+        $checks = ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
+
+        foreach ($checks as $check) {
+            if(!empty($_SERVER[$check])) {
+                $ip = $_SERVER[$check];
+                break;
+            }
+        }
+
+        return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '';
     }
 }

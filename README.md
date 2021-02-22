@@ -43,7 +43,18 @@ $configValues = [
     'keepCompletedUploads' => 5,
 
     // deletes all aborted initial uploads except for the last X ones
-    'keepAbortedUploads' => 1
+    'keepAbortedUploads' => 1,
+    
+    // statistical options
+    
+    // current shopsystem (magento / oxid)
+    'shopsystem' => 'magento',
+    
+    // current shopsystem version
+    'shopsystemversion' => '2',
+
+    // current extension version
+    'extensionversion' => '3.2',
 ];
 
 $sxConfig = new \Semknox\Core\SxConfig($configValues);

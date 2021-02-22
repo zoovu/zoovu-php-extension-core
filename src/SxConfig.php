@@ -40,7 +40,20 @@ class SxConfig
         'keepCompletedUploads' => 5,
 
         // deletes all aborted initial uploads except for the last X ones
-        'keepAbortedUploads'   => 1
+        'keepAbortedUploads'   => 1,
+
+        ///////////////////////////////////////////////
+        /// configuration for additional statistics
+
+        // current shopsystem (magento / oxid)
+        'shopsystem' => '',
+
+        // current shopsystem version
+        'shopsystemversion' => '',
+
+        // current extension version
+        'extensionversion' => '',
+
     ];
 
     public function __construct(array $config)
@@ -71,7 +84,7 @@ class SxConfig
      */
     public function set(string $key, $value)
     {
-        $this->config[$key] = $value;
+        $this->config[$key] = trim($value);
     }
 
     /**
@@ -85,6 +98,8 @@ class SxConfig
         if ($whitelist) {
             $data = array_intersect_key($data, array_flip($whitelist));
         }
+
+        $data = array_map('trim', $data);
 
         $this->config = array_merge($this->config, $data);
     }
@@ -197,10 +212,34 @@ class SxConfig
 
     /**
      * Return the number of aborted uploads to keep. Older uploads will be deleted automatically.
-     * @return mixed|null
+     * @return int
      */
     public function getKeepLastAbortedUploads()
     {
         return $this->get('keepAbortedUploads');
+    }
+
+    /**
+     * Get the name of the shop system.
+     * @return string
+     */
+    public function getShopsystem() {
+        return $this->get('shopsystem');
+    }
+
+    /**
+     * Get the current version of the shop system
+     * @return mixed
+     */
+    public function getShopsystemVersion() {
+        return $this->get('shopsystemversion');
+    }
+
+    /**
+     * Get the current extension version
+     * @return mixed
+     */
+    public function getExtensionVersion() {
+        return $this->get('extensionversion');
     }
 }
