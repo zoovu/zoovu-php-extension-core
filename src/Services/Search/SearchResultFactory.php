@@ -88,9 +88,12 @@ abstract class SearchResultFactory
         }
 
         // set active or not
+        // sporadic (???): 
+        // main.CRITICAL: Notice: Undefined index: key in .../semknox-core/src/Services/Search/SearchResultFactory.php on line 75 [] []
         $activeFilterKeys = array_map(function($filter) {
-            return $filter['key'];
+            return isset($filter['key']) ? $filter['key'] : false;
         }, $activeFilters);
+        $activeFilterKeys = array_filter($activeFilterKeys);
 
         if(($key = array_search($filter->getId(), $activeFilterKeys)) !== false) {
             $filter->setActive(true);
