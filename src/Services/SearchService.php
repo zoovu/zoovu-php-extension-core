@@ -136,6 +136,12 @@ class SearchService {
 
         $response = $this->client->request('get', 'search');
 
+        // redirect?
+        if(isset($response['redirect'])){
+            header("Location: ". $response['redirect']);
+            exit;
+        }
+
         return new SearchResponse($response);
     }
 
