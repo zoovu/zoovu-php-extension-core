@@ -4,6 +4,7 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Semknox\Core\Exceptions\SearchQueryTooShortException;
 use Semknox\Core\SxConfig;
 
 /**
@@ -153,6 +154,8 @@ class ApiClient
 	 */
 	public function request($method, $uri)
 	{
+	    $this->checkMinimumQueryLength();
+
 	    $uri = $this->replaceParametersInUri($uri);
 
         $requestParams = $this->makeGuzzleRequestParams($method);
@@ -180,6 +183,8 @@ class ApiClient
      */
     public function requestAsync($method, $uri, $params)
 	{
+        $this->checkMinimumQueryLength();
+
         if($params) {
             foreach($params as $key => $value) {
                 $this->setParam($key, $value);
@@ -191,6 +196,19 @@ class ApiClient
         $requestParams = $this->makeGuzzleRequestParams($method);
 
         return $this->client->requestAsync($method, $uri, $requestParams);
+	}
+
+    /**
+     * Check that the query is set and has a minimum length. Throws an exception if not.
+     * @throws SearchQueryTooShortException
+     */
+    private function checkMinimumQueryLength()
+    {
+        $query = isset($this->params['query']) ? $this->params['query'] : '';
+
+        if(strlen($query) < $this->config->getQueryMinLength()) {
+            throw new SearchQueryTooShortException();
+        }
 	}
 
 	/**

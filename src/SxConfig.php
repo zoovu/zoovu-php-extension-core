@@ -42,6 +42,9 @@ class SxConfig
         // deletes all aborted initial uploads except for the last X ones
         'keepAbortedUploads'   => 1,
 
+        // how many characters a search query has to have at least
+        'queryMinLength' => 3,
+
         ///////////////////////////////////////////////
         /// configuration for additional statistics
 
@@ -217,6 +220,15 @@ class SxConfig
     public function getKeepLastAbortedUploads()
     {
         return $this->get('keepAbortedUploads');
+    }
+
+    /**
+     * Return the minimum query string length
+     * @return int
+     */
+    public function getQueryMinLength()
+    {
+        return $this->get('queryMinLength');
     }
 
     /**

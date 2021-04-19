@@ -7,20 +7,13 @@ use Semknox\Core\Services\Search\Interfaces\SearchResponseInterface;
 use Semknox\Core\Services\Search\Sorting\SortingOption;
 use Semknox\Core\Services\Traits\ArrayGetTrait;
 
-class SearchResponse implements SearchResponseInterface
+/**
+ * The response when the given query was too short
+ * @package Semknox\Core\Services\Search
+ */
+class SearchResponseQueryTooShort implements SearchResponseInterface
 {
     use ArrayGetTrait;
-
-    /**
-     * Raw Semknox search response
-     * @var array
-     */
-    private $response;
-
-    public function __construct(array $response)
-    {
-        $this->response = $response;
-    }
 
     private function get($key, $default=null)
     {
@@ -42,7 +35,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getAnswerText()
     {
-        return $this->get('answerText');
+        return 'Der eingegebene Suchbegriff ist zu kurz. Wir konnte keine Ergebnisse finden.';
     }
 
     /**
@@ -51,15 +44,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getAvailableFilters()
     {
-        $activeFilters = $this->getActiveFilters();
-        $filters = $this->get('filterOptions');
-        $result = [];
-
-        foreach($filters as $filter) {
-            $result[] = SearchResultFactory::getFilter($filter, $activeFilters);
-        }
-
-        return $result;
+        return [];
     }
 
     /**
@@ -68,7 +53,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getActiveFilters()
     {
-        return array_filter($this->get('activeFilterOptions'));
+        return [];
     }
 
     /**
@@ -78,24 +63,12 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getAvailableSortingOptions()
     {
-        $activeSort = $this->getActiveSortingOption();
-        $sortingOptions = $this->get('sortingOptions');
-        $result = [];
-
-        foreach($sortingOptions as $option) {
-            $result[] = SearchResultFactory::getSortingOption($option, $activeSort);
-        }
-
-        return $result;
+        return [];
     }
 
-    /**
-     * Return the sorting options that are active for this query.
-     * @return array
-     */
     public function getActiveSortingOption()
     {
-        return $this->get('activeSortingOption');
+        return [];
     }
 
     /**
@@ -106,9 +79,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getTotalResults($resultGroup=null)
     {
-        return $resultGroup
-            ? $this->getResultGroup($resultGroup, 'totalResults')
-            : $this->get('totalResults');
+        return 0;
     }
 
     /**
@@ -117,7 +88,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getTotalProductResults()
     {
-        return $this->getTotalResults('products');
+        return 0;
     }
 
     /**
@@ -126,7 +97,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getProducts()
     {
-        return $this->getResults('products');
+        return [];
     }
 
     /**
@@ -135,7 +106,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getProductsFlattened()
     {
-        return $this->getResults('products', true);
+        return [];
     }
 
     /**
@@ -145,33 +116,7 @@ class SearchResponse implements SearchResponseInterface
      */
     public function getResults($groupType, $flattened=false)
     {
-        $return = [];
-        $results = $this->getResultGroup($groupType, 'results');
-
-        $resultFactory = ($groupType == 'products') ? 'getProduct' : 'getContent';
-
-        foreach($results as $items) {
-
-            if($groupType == 'products'){
-                
-                if($flattened) {
-                    foreach($items as $item) {
-                        $return[] = SearchResultFactory::$resultFactory([$item]);
-                    }
-                }
-                else {
-                    $return[] = SearchResultFactory::$resultFactory($items);
-                }
-
-            } else {
-
-                // custom type
-                $return = array_merge($return, SearchResultFactory::$resultFactory($items));
-
-            }
-        }
-
-        return $return;
+        return [];
     }
 
     /**
@@ -182,32 +127,7 @@ class SearchResponse implements SearchResponseInterface
      */
     private function getResultGroup($groupType, $key=null)
     {
-        $return = [];
-
-        foreach($this->get('searchResults') as $searchResult) {
-
-            if($searchResult['type'] === $groupType) {
-                if(!$key) {
-
-                    if($groupType == 'products'){
-                        return $searchResult;
-                    } 
-
-                    $return[] = $searchResult;
-                }
-                else {
-
-                    if ($groupType == 'products'){
-                        return isset($searchResult[$key]) ? $searchResult[$key] : [];
-                    }
-
-                    $return[] = $searchResult;
-                    
-                }
-            }
-        }
-
-        return $return;
+        return [];
     }
 
 

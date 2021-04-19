@@ -1,7 +1,9 @@
 <?php namespace Semknox\Core\Services;
 
+use Semknox\Core\Exceptions\SearchQueryTooShortException;
+use Semknox\Core\Services\Search\Interfaces\SearchResponseInterface;
 use Semknox\Core\Services\Search\SearchResponse;
-use Semknox\Core\SxConfig;
+use Semknox\Core\Services\Search\SearchResponseQueryTooShort;
 
 class SearchService {
     protected $client;
@@ -128,21 +130,26 @@ class SearchService {
 
     /**
      * Start the search.
-     * @return SearchResponse
+     * @return SearchResponseInterface
      */
     public function search()
     {
-        $this->setSearchParameters();
+        try {
+            $this->setSearchParameters();
 
-        $response = $this->client->request('get', 'search');
+            $response = $this->client->request('get', 'search');
 
-        // redirect?
-        if(isset($response['redirect'])){
-            header("Location: ". $response['redirect']);
-            exit;
+            // redirect?
+            if(isset($response['redirect'])){
+                header("Location: ". $response['redirect']);
+                exit;
+            }
+
+            return new SearchResponse($response);
         }
-
-        return new SearchResponse($response);
+        catch(SearchQueryTooShortException $e) {
+            return new SearchResponseQueryTooShort();
+        }
     }
 
     /**
