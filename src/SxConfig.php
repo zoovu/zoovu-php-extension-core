@@ -3,6 +3,8 @@ namespace Semknox\Core;
 
 
 use Semknox\Core\Exceptions\ConfigurationException;
+use Semknox\Core\Interfaces\LoggingServiceInterface;
+use Semknox\Core\Services\Logging\NullLoggingService;
 
 class SxConfig
 {
@@ -24,8 +26,13 @@ class SxConfig
 
         // when this configuration is given, an instance of this class will
         // automatically try to convert the given product to a Semknox compatible format
-        // For more information check the section `Product transformer`
+        // For more information check the section `Product transformer` in the README
         'productTransformer'   => null,
+
+        // A concrete implementation of the LoggingServiceInterface interface.
+        // When this configuration is set, the core can log additional information about
+        // the api.
+        'loggingService' => null,
 
         // how many products to collect in one file / send in one request
         'uploadBatchSize'      => 2000,
@@ -153,8 +160,29 @@ class SxConfig
     }
 
     /**
+     * Return an instance of the LoggingServiceInterface implementation.
+     * @return LoggingServiceInterface
+     */
+    public function getLoggingService()
+    {
+        $logger = $this->get('loggingService');
+
+        // convert class name to object
+        if(is_string($logger) && class_exists($logger)) {
+            $logger = new $logger;
+        }
+
+        // check that it implements
+        if(is_object($logger) && !is_a($logger, LoggingServiceInterface::class)) {
+            throw new ConfigurationException('The given loggingService does not implement the LoggingServiceInterface.');
+        }
+
+        return $logger ?: new NullLoggingService();
+    }
+
+    /**
      * Identifier for initial upload. Useful for differentiating between different shops or different language versions of one shop. Returns "<projectId>-<storeIdentifier>-initialupload".
-     * @return mixed|null
+     * @return string
      */
     public function getInitialUploadDirectoryIdentifier()
     {
@@ -167,7 +195,7 @@ class SxConfig
 
     /**
      * Identifier for product update. Useful for differentiating between different shops or different language versions of one shop. Returns "<projectId>-<storeIdentifier>-productupdate".
-     * @return mixed|null
+     * @return string
      */
     public function getProductUpdateDirectoryIdentifier()
     {

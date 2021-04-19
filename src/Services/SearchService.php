@@ -1,7 +1,7 @@
 <?php namespace Semknox\Core\Services;
 
 use Semknox\Core\Exceptions\SearchQueryTooShortException;
-use Semknox\Core\Services\Search\Interfaces\SearchResponseInterface;
+use Semknox\Core\Interfaces\SearchResponseInterface;
 use Semknox\Core\Services\Search\SearchResponse;
 use Semknox\Core\Services\Search\SearchResponseQueryTooShort;
 

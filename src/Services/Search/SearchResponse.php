@@ -2,8 +2,8 @@
 
 namespace Semknox\Core\Services\Search;
 
+use Semknox\Core\Interfaces\SearchResponseInterface;
 use Semknox\Core\Services\Search\Filters\TreeFilter;
-use Semknox\Core\Services\Search\Interfaces\SearchResponseInterface;
 use Semknox\Core\Services\Search\Sorting\SortingOption;
 use Semknox\Core\Services\Traits\ArrayGetTrait;
 

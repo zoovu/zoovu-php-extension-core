@@ -124,6 +124,9 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         $this->init($config);
 
         $this->status->writeToFile();
+
+        $logMessage = sprintf('New initial upload has started in "%s"', $this->workingDirectory->getPath());
+        $this->config->getLoggingService()->info($logMessage);
     }
 
     /**
@@ -154,6 +157,10 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         }
 
         if($this->isTimeoutActive()) return ['status' => 'success'];
+
+        // log that initial upload is now starting uploading
+        $logMessage = sprintf('Initial upload "%s" is now uploading the products', $this->workingDirectory->getPath());
+        $this->config->getLoggingService()->info($logMessage);
 
         try {
             $response = $this->client->request('POST', 'products/batch/initiate');

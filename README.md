@@ -1,5 +1,5 @@
 # Semknox Core
-
+[Target PHP Version: 5.6]
 This package simplifies communication with Semknox API. It provides the following features:
 
 * account creation // TODO
@@ -25,7 +25,7 @@ $configValues = [
     // it is required if you plan to do an initial upload
     'storagePath'        => '/path/to/writable/directory',
     
-    // when this configuration is givem, an instance of this class will
+    // when this configuration is given, an instance of this class will
     // automatically try to convert the given product to a Semknox compatible format
     // For more information check the section `Product transformer`    
     'productTransformer' => \My\Shop\Semknox\ProductTransformer::class,
@@ -61,7 +61,8 @@ $sxConfig = new \Semknox\Core\SxConfig($configValues);
 $sxCore = new \Semknox\Core\SxCore($sxConfig);
 ~~~
 
-TODO: Tabelle mit Infos zu Config-Einstellungen
+### Configure Logging Service
+To log addition events and errors you can provide a logging service to the configuration. The configuration can be either of type `(string) className` or `(\Semknox\Core\Interfaces\LoggingServiceInterface $class)`. If the class name is given as a string, the core will create an instance of that class. 
 
 ## Initial product upload
 

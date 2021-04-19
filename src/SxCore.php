@@ -14,7 +14,6 @@ class SxCore {
      */
     private $config;
 
-
     public function __construct(SxConfig $config)
     {
         if(PHP_VERSION < '5.6') {

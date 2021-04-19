@@ -5,7 +5,7 @@
  * @created 2021-04-19
  */
 
-namespace Semknox\Core\Services\Search\Interfaces;
+namespace Semknox\Core\Interfaces;
 
 use Semknox\Core\Services\Search\Filters\TreeFilter;
 use Semknox\Core\Services\Search\Product;

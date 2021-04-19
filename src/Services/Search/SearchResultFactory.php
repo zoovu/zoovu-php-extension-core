@@ -7,6 +7,13 @@ use Semknox\Core\Services\Search\Filters\RangeFilter;
 use Semknox\Core\Services\Search\Filters\TreeFilter;
 use Semknox\Core\Services\Search\Sorting\SortingOption;
 
+/**
+ * The purpose of this class is to convert the response from the Semknox API
+ * from JSON (array) to concrete class implementations.
+ * Instead of returning
+ *
+ * @package Semknox\Core\Services\Search
+ */
 abstract class SearchResultFactory
 {
     /**
