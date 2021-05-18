@@ -204,9 +204,9 @@ class ApiClient
      */
     private function checkMinimumQueryLength()
     {
-        $query = isset($this->params['query']) ? $this->params['query'] : '';
+        $query = isset($this->params['query']) ? $this->params['query'] : false;
 
-        if(strlen($query) < $this->config->getQueryMinLength()) {
+        if(is_string($query) && strlen($query) < $this->config->getQueryMinLength()) {
             throw new SearchQueryTooShortException();
         }
 	}

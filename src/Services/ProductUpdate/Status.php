@@ -314,6 +314,8 @@ class Status
         $this->data['timeout'] = time() + ($timeToWait * $this->data['timeoutCounter']);
 
         $this->changed = true;
+
+        return $timeToWait / 60; // timeout in minutes
     }
 
     /**

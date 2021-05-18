@@ -165,7 +165,9 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         try {
             $response = $this->client->request('POST', 'products/batch/initiate');
         } catch (Exception $e) {
-            $this->status->setTimeout();
+            $timeout = $this->status->setTimeout();
+            $this->config->getLoggingService()->error('POST products/batch/initiate: '.$timeout.' minutes timeout');
+
             throw new Exception($e->getMessage()); // to get a log entry
         }
 
@@ -173,7 +175,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         if ($response['status'] == 'success') {
             $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
         } else {
-            $this->status->setTimeout();
+            $timeout = $this->status->setTimeout();
+            $this->config->getLoggingService()->error('products/batch/initiate RESPONSE='.$response['status'].': '.$timeout.' minutes timeout');
         }
 
         return $response;
@@ -203,7 +206,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         try{
             $response = $this->client->request('POST', 'products/batch/upload');
         } catch (Exception $e){
-            $this->status->setTimeout();
+            $timeout = $this->status->setTimeout();
+            $this->config->getLoggingService()->error('POST products/batch/upload: '.$timeout.' minutes timeout');
             throw new Exception($e->getMessage()); // to get a log entry
         }
     
@@ -221,7 +225,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
             return $numberOfProducts;
         } else {
-            $this->status->setTimeout();
+            $timeout = $this->status->setTimeout();
+            $this->config->getLoggingService()->error('products/batch/upload RESPONSE='.$response['status'].': '.$timeout.' minutes timeout');
         }
 
         // todo: throw exception on error instead of returning false
@@ -243,15 +248,20 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         $response['status'] = 'success';
 
         if($signal){
-            $this->signalizeSemknoxToStartProcessing();
+            $response = $this->signalizeSemknoxToStartProcessing();
         }
 
-        // ..and change directory name to .COMPLETED
-        $this->setPhaseTo(($this->status)::PHASE_COMPLETED);
-        $this->status->writeToFile(); // fixes not saving COMPLETED status
+        if($response['status'] == 'success'){
+            // ..and change directory name to .COMPLETED
+            $this->setPhaseTo(($this->status)::PHASE_COMPLETED);
+            $this->status->writeToFile(); // fixes not saving COMPLETED status
 
-        if($cleanUp) {
-            $this->cleanupOldUploadDirectories();
+            if($cleanUp) {
+                $this->cleanupOldUploadDirectories();
+            }
+
+            $logMessage = sprintf('Initial upload "%s" finished', $this->workingDirectory->getPath());
+            $this->config->getLoggingService()->info($logMessage);  
         }
 
         return $response;
@@ -271,15 +281,16 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         try {
             $response = $this->client->request('POST', 'products/batch/start');
         } catch (Exception $e) {
-            $this->status->setTimeout();
+            $timeout = $this->status->setTimeout();
+            $this->config->getLoggingService()->error('POST products/batch/start: '.$timeout.' minutes timeout');      
             throw new Exception($e->getMessage()); // to get a log entry
         }
 
-        // check if request was successfull
-        if ($response['status'] != 'success') {
-            return $response; // try again on next run!
-            // $this->status->setTimeout();
+        if($response['status'] != 'success'){
+            $this->config->getLoggingService()->error('products/batch/start RESPONSE='.$response['status'].': try again on next run');
         }
+
+        return $response; // try again on next run
     }
 
     /**
