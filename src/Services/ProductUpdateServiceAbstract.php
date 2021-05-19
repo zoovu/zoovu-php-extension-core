@@ -153,6 +153,11 @@ abstract class ProductUpdateServiceAbstract {
     }
 
 
+    
+    public function getStatus(){
+        return $this->status;
+    }
+
 
 
 }

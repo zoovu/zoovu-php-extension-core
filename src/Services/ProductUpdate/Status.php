@@ -78,6 +78,7 @@ class Status
             'startTime' => date('Y-m-d H:i:s'),
             'duration'  => 0,
             'collected' => 0,
+            'sortedOut'  => 0,
             'uploaded'  => 0,
             'expectedNumberOfProducts' => $expectedNumberOfProducts
         ];
@@ -189,12 +190,36 @@ class Status
     }
 
     /**
+     * Increase number of sorted Out collected products by $numCollected.
+     * @param int $numCollected
+     *
+     * @return $this
+     */
+    public function increaseNumberOfSortedOut($numCollected=1)
+    {
+        $this->data['sortedOut'] += $numCollected;
+
+        $this->changed = true;
+
+        return $this;
+    }
+
+    /**
      * Get the amount of already collected products.
      * @return int
      */
     public function getNumberOfCollected()
     {
-        return $this->data['collected'];
+        return (int) $this->data['collected'] + (int) $this->data['sortedOut'];
+    }
+
+    /**
+     * Get the amount of already sorted out products.
+     * @return int
+     */
+    public function getNumberOfSortedOut()
+    {
+        return (int) $this->data['sortedOut'];
     }
 
     /**
@@ -204,11 +229,12 @@ class Status
     public function getCollectingProgress()
     {
         $expected = $this->data['expectedNumberOfProducts'];
+        $collected = $this->getNumberOfCollected();
 
-        if($this->data['collected'] > $expected) return 100;
+        if($collected > $expected) return 100;
 
         return $expected
-            ? round(($this->data['collected'] / $expected) * 100)
+            ? round(($collected / $expected) * 100)
             : 0;
     }
 
@@ -243,11 +269,12 @@ class Status
     public function getUploadingProgress()
     {
         $expected = max($this->data['expectedNumberOfProducts'], $this->getNumberOfCollected());
+        $uploaded = $this->getNumberOfUploaded() + $this->data['sortedOut'];
 
-        if($this->data['uploaded'] > $expected) return 100;
+        if($uploaded > $expected) return 100;
 
         return $expected
-            ? round(($this->data['uploaded'] / $expected) * 100)
+            ? round(($uploaded / $expected) * 100)
             : 0;
     }
 

@@ -383,4 +383,5 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         return false;
 
     }
+
 }
