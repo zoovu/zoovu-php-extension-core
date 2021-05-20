@@ -213,6 +213,16 @@ class Status
         return (int) $this->data['collected'] + (int) $this->data['sortedOut'];
     }
 
+
+    /**
+     * Get the amount of expected products.
+     * @return int
+     */
+    public function getExpectedNumberOfProducts()
+    {
+        return (int) $this->data['expectedNumberOfProducts'];
+    }
+
     /**
      * Get the amount of already sorted out products.
      * @return int

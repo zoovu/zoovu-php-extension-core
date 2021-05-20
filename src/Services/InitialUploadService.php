@@ -127,6 +127,10 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         $logMessage = sprintf('New initial upload has started in "%s"', $this->workingDirectory->getPath());
         $this->config->getLoggingService()->info($logMessage);
+
+        $expected = $this->getStatus()->getExpectedNumberOfProducts();
+        $this->config->getLoggingService()->info("+/- $expected products in this upload expected");
+
     }
 
     /**
@@ -150,6 +154,10 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      */
     public function startUploading()
     {
+        $productsSortedOut = $this->getStatus()->getNumberOfSortedOut();
+        $productsPrepared = $this->getStatus()->getNumberOfCollected() - $productsSortedOut;
+        $this->config->getLoggingService()->info("$productsPrepared products prepared for upload, $productsSortedOut products sorted out");
+
         $currentPhase = $this->getPhase();
 
         if($currentPhase !== ($this->status)::PHASE_COLLECTING) {
@@ -177,6 +185,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         } else {
             $timeout = $this->status->setTimeout();
             $this->config->getLoggingService()->error('products/batch/initiate RESPONSE='.$response['status'].': '.$timeout.' minutes timeout');
+            $this->config->getLoggingService()->error($response['message']);
         }
 
         return $response;
@@ -193,6 +202,18 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         $file = $this->productCollection->nextFileToUpload();
         if(!$file) {
+
+            //todo: IMPROVE!
+
+            // to finish uploading 
+            $numberOfCollected = $this->status->getNumberOfCollected();
+            $numberOfUploaded = $this->status->getNumberOfUploaded();
+
+            $fillUp = $numberOfCollected - $numberOfUploaded;
+
+            $this->status->increaseNumberOfUploaded($fillUp);
+            $this->status->writeToFile();
+
             return 0;
         }
 
@@ -229,6 +250,23 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $this->config->getLoggingService()->error('products/batch/upload RESPONSE='.$response['status'].': '.$timeout.' minutes timeout');
         }
 
+
+        if(is_array($response)){   
+
+            if (isset($response['validation'][0]['schemaErrors'][0])) {
+                $this->config->getLoggingService()->error('products/batch/upload VALIDATION FAILED:');
+                $this->config->getLoggingService()->error(json_encode($response));
+            }
+
+            if (isset($response['status']) && $response['status'] !== 'success') {
+                $this->config->getLoggingService()->error('products/batch/upload VALIDATION FAILED:');
+                $this->config->getLoggingService()->error(json_encode($response));
+            }
+
+        } if(is_int($response) && $response > 0){
+            $this->config->getLoggingService()->info("$response products uploaded in this branch");
+        }
+
         // todo: throw exception on error instead of returning false
         //       that way we don't have to differentiate between 0 and false
         return $returnFullResponse ? $response : false; // attention: 0 !== false
@@ -262,6 +300,9 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
             $logMessage = sprintf('Initial upload "%s" finished', $this->workingDirectory->getPath());
             $this->config->getLoggingService()->info($logMessage);  
+        } else {
+            $this->config->getLoggingService()->error($logMessage);  
+            $this->config->getLoggingService()->error(json_encode($response));
         }
 
         return $response;
