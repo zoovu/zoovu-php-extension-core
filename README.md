@@ -1,6 +1,6 @@
-# Semknox Core
+# SEMKNOX SiteSearch360 Integration-Core
 [Target PHP Version: 5.6]
-This package simplifies communication with Semknox API. It provides the following features:
+This package simplifies communication with SEMKNOX SiteSearch360 API. It provides the following features:
 
 * account creation // TODO
 * initial product upload
