@@ -56,7 +56,10 @@ class SearchResponse implements SearchResponseInterface
         $result = [];
 
         foreach($filters as $filter) {
-            $result[] = SearchResultFactory::getFilter($filter, $activeFilters);
+            $sxFilter = SearchResultFactory::getFilter($filter, $activeFilters);
+            if(!$sxFilter) continue;
+
+            $result[] = $sxFilter;
         }
 
         return $result;

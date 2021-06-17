@@ -15,6 +15,9 @@ class CollectionFilter extends AbstractFilter {
         $result = [];
 
         foreach($values as $value) {
+
+            if(!isset($value['value']) || !isset($value['name']) || !isset($value['count'])) continue;
+
             // convert key => value to concept format
             $result[] = new Option([
                'key'      => $value['value'],

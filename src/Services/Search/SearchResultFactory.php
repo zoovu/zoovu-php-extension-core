@@ -71,7 +71,11 @@ abstract class SearchResultFactory
      */
     public static function getFilter(array $filterData, array $activeFilters)
     {
-        switch(strtoupper($filterData['type'])) {
+        $filterType = isset($filterData['type']) ? $filterData['type'] : false;
+        $filterType = !$filterType && isset($filterData['filterType']) ? $filterData['filterType'] : $filterType;
+        $filter = false;
+
+        switch($filterType) {
             case 'TREE':
                 $filter = new TreeFilter($filterData);
                 break;
@@ -90,8 +94,11 @@ abstract class SearchResultFactory
         }
 
         if(!$filter) {
-            $exceptionMessage = sprintf('Undefined filter type "%s" received.', $filterData['type']);
+            return false;
+            /*
+            $exceptionMessage = sprintf('Undefined filter type "%s" received.', $filterType);
             throw new LogicException($exceptionMessage);
+            */
         }
 
         // set active or not
