@@ -39,6 +39,20 @@ class SearchService {
     }
 
     /**
+     * Search products depending on the current category. Used for SEMKNOX navigational search. Takes the current category and all parent categories as parameter. The topmost category must be the first category in the array. [CATEGORY1, SUBCATEGORY1, SUBSUBCATEGORY1]
+     * @see https://docs.semknox.com/#27fe19d7-e72c-4746-92a3-2b7bf7c8235f
+     * @param array $categories
+     */
+    public function queryCategory(array $categories)
+    {
+        // query always starts with "_#" followed by your path to the leave category
+        // e.g. "Electronics > Phones > Smartphones" would be _#Electronics#Phones#Smartphones
+        $query = sprintf('_#%s', implode('#', $categories));
+
+        return $this->query($query);
+    }
+
+    /**
      * Add an additional filter
      * @param string $name
      * @param mixed $values
