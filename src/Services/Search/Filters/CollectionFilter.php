@@ -1,6 +1,8 @@
 <?php namespace Semknox\Core\Services\Search\Filters;
 
-class CollectionFilter extends AbstractFilter {
+use Semknox\Core\Interfaces\FilterInterface;
+
+class CollectionFilter extends AbstractFilter implements FilterInterface {
     public function getType()
     {
         return 'COLLECTION';

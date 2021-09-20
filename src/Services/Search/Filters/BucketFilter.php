@@ -1,6 +1,8 @@
 <?php namespace Semknox\Core\Services\Search\Filters;
 
-class BucketFilter extends AbstractFilter {
+use Semknox\Core\Interfaces\FilterInterface;
+
+class BucketFilter extends AbstractFilter implements FilterInterface {
     public function getType()
     {
         return 'BUCKET';

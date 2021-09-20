@@ -1,6 +1,8 @@
 <?php namespace Semknox\Core\Services\Search\Filters;
 
-class RangeFilter extends AbstractFilter {
+use Semknox\Core\Interfaces\FilterInterface;
+
+class RangeFilter extends AbstractFilter implements FilterInterface {
     /**
      * Currently active min range value
      * @var flat

@@ -18,6 +18,7 @@ abstract class AbstractFilter {
 
     /**
      * Return the type of this filter.
+     * @return string
      */
     abstract public function getType();
 
@@ -108,20 +109,4 @@ abstract class AbstractFilter {
             : false;
     }
 
-
-
-    /**
-     * Get all available options for this filter.
-     */
-    public function getOptions()
-    {
-        $concepts = $this->filterData['categories'];
-        $result = [];
-
-        foreach($concepts as $concept) {
-            $result[] = new Option($concept, $this->getActiveOptions());
-        }
-
-        return $result;
-    }
 }

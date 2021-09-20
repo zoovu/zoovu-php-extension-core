@@ -6,7 +6,7 @@ $sxCore = makeSxCore();
 
 $search = $sxCore->getSearch();
 
-$search = $search->query('*');
+$search = $search->query('ding');
 
 echo 'Url: ' . $search->getRequestUrl() . "<br>";
 

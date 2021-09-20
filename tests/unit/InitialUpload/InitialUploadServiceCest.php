@@ -9,23 +9,36 @@ use Semknox\Core\Services\InitialUploadService;
 
 class InitialUploadServiceCest
 {
+    /**
+     * @var \Semknox\Core\SxCore
+     */
+    protected $sxCore;
+
+    /**
+     * @var InitialUploadService
+     */
     protected $initialUpload;
 
-    public function _before(UnitTester $I)
+    public function __construct()
     {
         // instantiate $initalUpload
-        $core = $I->getSxCore();
-
-        $this->initialUpload = $core->getInitialUploader();
+        $this->sxCore = \Helper\UnitTester::getSxCore();
+        $this->initialUpload = $this->sxCore->getInitialUploader();
     }
+
+    //--------------------------------------------------------------
+    // TESTS
+    //--------------------------------------------------------------
 
     public function testType(UnitTester $I)
     {
         $I->assertInstanceOf(InitialUploadService::class, $this->initialUpload);
     }
 
-    public function test()
+    public function testStatusCollecting(UnitTester $I)
     {
-        
+        $this->initialUpload->startCollecting();
+
+        $I->assertTrue($this->initialUpload->isCollecting());
     }
 }

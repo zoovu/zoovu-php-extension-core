@@ -6,8 +6,21 @@ namespace Helper;
 
 class UnitTester extends \Codeception\Module
 {
-    public function getSxCore()
+    /**
+     * @var \Semknox\Core\SxCore
+     */
+    private static $sxCore;
+
+    /**
+     * @return \Semknox\Core\SxCore
+     * @throws \Exception
+     */
+    public static function getSxCore()
     {
+        if(self::$sxCore) {
+            return self::$sxCore;
+        }
+
         $config = [
             // required options
             //        'apiKey'      => '85owx55emd2gmoh8dtx7y49so44fy745',
@@ -25,13 +38,12 @@ class UnitTester extends \Codeception\Module
             // optional options
             //'productTransformer' => MagentoSemknoxProductTransformer::class,
 
-            'storagePath'        => __DIR__ . '/../../_data/tmp',
+            'storagePath'        => __DIR__ . '/../../_data/',
             'requestTimeout' => 30
         ];
 
         $sxConfig = new \Semknox\Core\SxConfig($config);
-        $sxCore = new \Semknox\Core\SxCore($sxConfig);
-
-        return $sxCore;
+        self::$sxCore = new \Semknox\Core\SxCore($sxConfig);
+        return self::$sxCore;
     }
 }

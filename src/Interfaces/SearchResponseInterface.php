@@ -27,7 +27,7 @@ interface SearchResponseInterface
 
     /**
      * Return all filter options available for this search.
-     * @return TreeFilter[]
+     * @return AbstractFilter[]
      */
     public function getAvailableFilters();
 
