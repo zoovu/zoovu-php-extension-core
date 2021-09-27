@@ -110,8 +110,12 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      * Config (todo):
      *  - expectedNumberOfProducts     (how many products we're expecting in total. If set we can get the progress in  helps with status report)
      */
-    public function startCollecting($config = [])
+    public function startCollecting($config = [], $cleanUp = true)
     {
+        if ($cleanUp) {
+            $this->cleanupOldUploadDirectories();
+        }
+
         if($this->isRunning()) {
             throw new LogicException('Initial upload is already running. Can not start a new initial upload. Please wait for the previous upload to complete or abort the upload first.');
         }
