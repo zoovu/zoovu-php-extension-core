@@ -8,7 +8,9 @@ require __DIR__ . '/_config.php';
 
 $sxCore = makeSxCore();
 $search = $sxCore->getSearch();
-$search = $search->query('Ding');
+$search = $search->query('Ding')
+                 ->addFilter('Kategorie', 'ROOT/Verbrauchsmaterial/Laborbedarf/Abformung & Prothetik/Hilfsmittel für Abformung & Prothetik')
+;
 
 $result   = $search->search();
 
@@ -29,8 +31,9 @@ function iterateThroughOptions($options, $level=0)
 {
     foreach ($options as $option) {
         /* @var $option \Semknox\Core\Services\Search\Filters\Option */
-        echo sprintf("%s %s (%d) \n",
+        echo sprintf("%s %s %s (%d) \n",
                 str_repeat('—', $level), // level indicator
+                $option->isActive() ? ' ✔✔✔ ' : '',
                 $option->getName(),
                 $option->getNumberOfResults()
         );

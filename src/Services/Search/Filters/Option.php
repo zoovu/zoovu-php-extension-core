@@ -15,6 +15,13 @@ class Option {
     protected $optionData;
 
     /**
+     * A list of active option objects. Each active option has the keys: key, name and value
+     *
+     * @var array
+     */
+    protected $activeOptions;
+
+    /**
      * A list of
      * @var
      */
@@ -35,6 +42,8 @@ class Option {
         }
 
         if($activeOptions) {
+            $this->activeOptions = $activeOptions;
+
             $activeOptionKeys = array_map(function($value) {
                 return $value['value'];
             }, $activeOptions);
@@ -120,7 +129,7 @@ class Option {
         $result = [];
 
         foreach($children as $child) {
-            $result[] = new Option($child);
+            $result[] = new Option($child, $this->activeOptions);
         }
 
         return $result;

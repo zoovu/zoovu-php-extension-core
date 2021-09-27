@@ -53,9 +53,11 @@ class SearchService {
     }
 
     /**
-     * Add an additional filter
-     * @param string $name
-     * @param mixed $values
+     * Add a filter to the search. Use the name of the filter and the string-value to filter for.
+     * For categories, you can pass the path in the form "ROOT/category1/subcategory1.1".
+     *
+     * @param string $name The name of the filter
+     * @param mixed $values A single value or an array of values.
      * @return SearchService
      */
     public function addFilter($name, $values)
@@ -72,6 +74,10 @@ class SearchService {
             ];
         }
         else {
+            if(!is_array($values)) {
+                $values = [$values];
+            }
+
             // convert each value to an array with key: "name" // 2020-08-118: now its the key "value"
             $values = array_map(function($value) {
                 return [

@@ -24,7 +24,7 @@ abstract class AbstractFilter {
 
     /**
      * Alias for $this->getKey()
-     * @return mixed.
+     * @return int
      */
     public function getId()
     {
@@ -33,7 +33,7 @@ abstract class AbstractFilter {
 
     /**
      * Return the key for this filter
-     * @return mixed.
+     * @return int
      */
     public function getKey()
     {
