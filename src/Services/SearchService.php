@@ -45,6 +45,11 @@ class SearchService {
      */
     public function queryCategory(array $categories)
     {
+        foreach($categories as &$category){
+            $category = html_entity_decode($category);
+            $category = \urlencode($category);
+        }
+
         // query always starts with "_#" followed by your path to the leave category
         // e.g. "Electronics > Phones > Smartphones" would be _#Electronics#Phones#Smartphones
         $query = sprintf('_#%s', implode('#', $categories));
