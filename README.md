@@ -213,3 +213,11 @@ $response = $search->limitProducts(8)
 
 $products = $response->getProducts();
 ~~~
+
+# Running tests
+
+To run unit tests with Codeception run
+
+~~~
+vendor/bin/codecept run --fail-fast
+~~~

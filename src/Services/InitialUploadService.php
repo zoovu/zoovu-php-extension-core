@@ -183,7 +183,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             throw new Exception($e->getMessage()); // to get a log entry
         }
 
-        // check if request was successfull before setting phase to uploading
+        // check if request was successful before setting phase to uploading
         if ($response['status'] == 'success') {
             $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
         } else {
@@ -202,8 +202,6 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      */
     public function sendUploadBatch($returnFullResponse = false)
     {
-        $response = [];
-
         $file = $this->productCollection->nextFileToUpload();
         if(!$file) {
 
@@ -297,6 +295,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             // ..and change directory name to .COMPLETED
             $this->setPhaseTo(($this->status)::PHASE_COMPLETED);
             $this->status->writeToFile(); // fixes not saving COMPLETED status
+            $this->removeLock();
 
             if($cleanUp) {
                 $this->cleanupOldUploadDirectories();
@@ -305,7 +304,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $logMessage = sprintf('Initial upload "%s" finished', $this->workingDirectory->getPath());
             $this->config->getLoggingService()->info($logMessage);  
         } else {
-            $this->config->getLoggingService()->error($logMessage);  
+            $logMessage = sprintf('Initial upload "%s" could not finish. Status "success" was not returned by SEMKNOX', $this->workingDirectory->getPath());
+            $this->config->getLoggingService()->error($logMessage);
             $this->config->getLoggingService()->error(json_encode($response));
         }
 

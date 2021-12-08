@@ -89,7 +89,7 @@ abstract class WorkingDirectoryFactory
     {
         $storagePath = rtrim($storagePath, '/');
 
-        $time = date('YmdHis');
+        $time = date('Ymd') . '-' . (microtime(true) * 10000);
 
         return "$storagePath/$identifier-$time." . Status::PHASE_COLLECTING;
     }
