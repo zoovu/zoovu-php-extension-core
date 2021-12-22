@@ -17,7 +17,7 @@ class SxConfig
         // default config is defined here
         'apiKey'               => '',
         'projectId'            => '',
-        'apiUrl'               => 'https://dev-api-v3.semknox.com/',
+        'apiUrl'               => 'https://api-magento.sitesearch360.com/',
 
         // update date is stored on the file system and then sent to Semknox bundled
         // this config tells the core where to store the update data
