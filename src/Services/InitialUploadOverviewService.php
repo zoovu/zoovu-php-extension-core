@@ -51,7 +51,7 @@ class InitialUploadOverviewService
      */
     public function getRunningUploads()
     {
-        $pattern = $this->storagePath . '/*';
+        $pattern = rtrim($this->storagePath, '/') . '/*';
 
         $directories = glob($pattern, GLOB_ONLYDIR);
 
@@ -65,7 +65,7 @@ class InitialUploadOverviewService
         foreach($directories as $directory) {
             $name = basename($directory);
 
-            preg_match('/^[0-9]+-(.+?)-initialupload-([0-9]{14})\.([A-Z]+?)$/i', $name, $matches);
+            preg_match('/^[0-9]+-(.+?)-initialupload-([0-9]{8}-[0-9]+)\.([A-Z]+?)$/i', $name, $matches);
 
             $identifier = isset($matches[1]) ? $matches[1] : false;
             $phase = isset($matches[3]) ? $matches[3] : false;
