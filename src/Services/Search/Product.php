@@ -33,6 +33,15 @@ class Product {
     }
 
     /**
+     * Return the GroupId 
+     * @return mixed.
+     */
+    public function getGroupId()
+    {
+        return $this->masterProduct['groupId'];
+    }
+
+    /**
      * Return the id Semknox has given this product.
      * @return int
      */
