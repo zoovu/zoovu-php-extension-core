@@ -33,6 +33,8 @@ class RangeFilter extends AbstractFilter implements FilterInterface {
         $counts = $this->filterData['counts'];
         $result = [];
 
+        if(!is_array($counts)) return $result;
+        
         foreach($counts as $value => $count) {
             $active = is_numeric($value)
                        && ($value >= $this->activeMin)
