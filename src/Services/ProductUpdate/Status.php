@@ -278,7 +278,7 @@ class Status
      */
     public function getUploadingProgress()
     {
-        $expected = max($this->data['expectedNumberOfProducts'], $this->getNumberOfCollected());
+        $expected = $this->getNumberOfCollected();
         $uploaded = $this->getNumberOfUploaded() + $this->data['sortedOut'];
 
         if($uploaded > $expected) return 100;
