@@ -73,9 +73,18 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $this->productCollection->writeToFile();
         }
 
+        $numberOfProducts = $this->productCollection->getProductsAddedInThisRun();
+        if ($numberOfProducts) {
+            $this->config->getLoggingService()->info("$numberOfProducts products added to upload");
+        }
+
         if($this->status->changed){
             // write status from memory to file
             $this->status->writeToFile();
+        }
+
+        if ($this->status->phaseChanged) {
+            $this->config->getLoggingService()->info("upload status changed: " . $this->status->getPhase());
         }
 
         $this->removeLock();
@@ -134,6 +143,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         $expected = $this->getStatus()->getExpectedNumberOfProducts();
         $this->config->getLoggingService()->info("+/- $expected products in this upload expected");
+        $this->config->getLoggingService()->info("upload status changed: " . $this->status->getPhase());
 
     }
 
@@ -179,7 +189,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         } catch (Exception $e) {
             $timeout = $this->status->setTimeout();
             $this->config->getLoggingService()->error('POST products/batch/initiate: '.$timeout.' minutes timeout');
-
+            $this->config->getLoggingService()->error($e->getMessage());
             throw new Exception($e->getMessage()); // to get a log entry
         }
 
@@ -231,6 +241,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         } catch (Exception $e){
             $timeout = $this->status->setTimeout();
             $this->config->getLoggingService()->error('POST products/batch/upload: '.$timeout.' minutes timeout');
+            $this->config->getLoggingService()->error($e->getMessage());
+
             throw new Exception($e->getMessage()); // to get a log entry
         }
     
@@ -245,6 +257,9 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             // rename file to .completed.
             // Todo: this should not be done by this service
             rename($file, str_replace('.json', '.uploaded.json', $file));
+
+            $this->config->getLoggingService()->info("$numberOfProducts products uploaded");
+
 
             return $numberOfProducts;
         } else {
@@ -321,13 +336,18 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
     private function signalizeSemknoxToStartProcessing()
     {
         // when done change signal Semknox to start processing...
-        if ($this->isTimeoutActive()) return ['status' => 'success'];
+        if ($this->isTimeoutActive()){
+            $this->config->getLoggingService()->info('still in timeout');
+            return ['status' => 'success'];
+        } 
 
         try {
             $response = $this->client->request('POST', 'products/batch/start');
         } catch (Exception $e) {
             $timeout = $this->status->setTimeout();
-            $this->config->getLoggingService()->error('POST products/batch/start: '.$timeout.' minutes timeout');      
+            $this->config->getLoggingService()->error('POST products/batch/start: '.$timeout.' minutes timeout');
+            $this->config->getLoggingService()->error($e->getMessage());
+     
             throw new Exception($e->getMessage()); // to get a log entry
         }
 

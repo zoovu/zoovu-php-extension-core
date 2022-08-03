@@ -30,6 +30,8 @@ class ProductCollection {
      */
     protected $productCollectionMaxSize = 200;
 
+    protected $productsAddedInThisRun = 0;
+
 
     /**
      * ProductCollection constructor.
@@ -151,9 +153,19 @@ class ProductCollection {
             $this->clear();
         }
 
+        $this->productsAddedInThisRun++;
+
         $this->productCollection[] = $product;
     }
 
+    /**
+     * Return current productcollection size
+     * @return int
+     */
+    public function getProductsAddedInThisRun()
+    {
+        return $this->productsAddedInThisRun;
+    }
 
 
     /**

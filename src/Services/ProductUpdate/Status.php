@@ -33,6 +33,12 @@ class Status
     public $changed;
 
     /**
+     * Has status phase changed.
+     * @var bool
+     */
+    public $phaseChanged = false;
+
+    /**
      * InitialUploadStatus constructor.
      *
      * @param array $status Status information
@@ -170,6 +176,7 @@ class Status
         }
 
         $this->changed = true;
+        $this->phaseChanged = true;
 
         $this->data['phase'] = $phase;
     }
