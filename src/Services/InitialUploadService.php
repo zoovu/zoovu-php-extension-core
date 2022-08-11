@@ -17,6 +17,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
     use LockTrait;
 
+    private $_startTime;
+
     /**
      * InitialUploadService constructor.
      *
@@ -75,7 +77,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         $numberOfProducts = $this->productCollection->getProductsAddedInThisRun();
         if ($numberOfProducts) {
-            $this->config->getLoggingService()->info("$numberOfProducts products added to upload");
+            $this->config->getLoggingService()->info("$numberOfProducts products added to upload [".$this->getDuration()."]");
         }
 
         if($this->status->changed){
@@ -107,6 +109,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      */
     private function init(array $initialUploadConfig=[])
     {
+        $this->_startTime = microtime(true);
+
         $this->status = new Status($this->workingDirectory, $initialUploadConfig);
 
         $this->productCollection = new ProductCollection($this->workingDirectory, [
@@ -142,7 +146,9 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
         $this->config->getLoggingService()->info($logMessage);
 
         $expected = $this->getStatus()->getExpectedNumberOfProducts();
-        $this->config->getLoggingService()->info("+/- $expected products in this upload expected");
+
+        $duration = date("H:i:s.u", (microtime() - $this->_startTime) / 1000);
+        $this->config->getLoggingService()->info("+/- $expected products in this upload expected [" . $this->getDuration() . "]");
         $this->config->getLoggingService()->info("upload status changed: " . $this->status->getPhase());
 
     }
@@ -168,17 +174,21 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
      */
     public function startUploading()
     {
-        $productsSortedOut = $this->getStatus()->getNumberOfSortedOut();
-        $productsPrepared = $this->getStatus()->getNumberOfCollected() - $productsSortedOut;
-        $this->config->getLoggingService()->info("$productsPrepared products prepared for upload, $productsSortedOut products sorted out");
-
         $currentPhase = $this->getPhase();
 
         if($currentPhase !== ($this->status)::PHASE_COLLECTING) {
+            $this->config->getLoggingService()->error('Can not startUploading because current upload is not in phase "collecting"');
             throw new \RuntimeException('Can not startUploading because current upload is not in phase "collecting"');
         }
 
-        if($this->isTimeoutActive()) return ['status' => 'success'];
+        if($this->isTimeoutActive()){
+            $this->config->getLoggingService()->info("still in timeout-mode.");
+            return ['status' => 'success'];
+        }
+
+        $productsSortedOut = $this->getStatus()->getNumberOfSortedOut();
+        $productsPrepared = $this->getStatus()->getNumberOfCollected() - $productsSortedOut;
+        $this->config->getLoggingService()->info("$productsPrepared products prepared for upload, $productsSortedOut products sorted out");
 
         // log that initial upload is now starting uploading
         $logMessage = sprintf('Initial upload "%s" is now uploading the products', $this->workingDirectory->getPath());
@@ -258,7 +268,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             // Todo: this should not be done by this service
             rename($file, str_replace('.json', '.uploaded.json', $file));
 
-            $this->config->getLoggingService()->info("$numberOfProducts products uploaded");
+            $this->config->getLoggingService()->info("$numberOfProducts products uploaded [" . $this->getDuration() . "]");
 
 
             return $numberOfProducts;
@@ -447,6 +457,13 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         return false;
 
+    }
+
+    private function getDuration()
+    {
+        $duration = (microtime(true) - $this->_startTime) / 1000;
+        $this->_startTime = microtime(true);
+        return $duration.' ms';
     }
 
 }
