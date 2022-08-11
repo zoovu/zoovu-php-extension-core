@@ -147,7 +147,6 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
         $expected = $this->getStatus()->getExpectedNumberOfProducts();
 
-        $duration = date("H:i:s.u", (microtime() - $this->_startTime) / 1000);
         $this->config->getLoggingService()->info("+/- $expected products in this upload expected [" . $this->getDuration() . "]");
         $this->config->getLoggingService()->info("upload status changed: " . $this->status->getPhase());
 
@@ -463,7 +462,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
     {
         $duration = (microtime(true) - $this->_startTime) / 1000;
         $this->_startTime = microtime(true);
-        return $duration.' ms';
+        return $duration.' s';
     }
 
 }
