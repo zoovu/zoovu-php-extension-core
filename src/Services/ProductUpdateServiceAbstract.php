@@ -104,13 +104,16 @@ abstract class ProductUpdateServiceAbstract {
     }
 
     /**
-     * Cast all numeric values to strings, because Semknox API requires String values instead of numeric JSON values.
+     * 2020-06-24: Cast all numeric values to strings, because Semknox API requires String values instead of numeric JSON values.
+     * 2022-11-16: Cast all numeric values IN ATTRIBUTES to strings, because Semknox API requires String values instead of numeric JSON values.
      * @param array $product
      * @return array
      */
     private function enforceStringValues(array $product)
     {
-        array_walk_recursive($product, function(&$item, $key) {
+        if(!isset($product['attributes'])) return $product;
+
+        array_walk_recursive($product['attributes'], function(&$item, $key) {
             if(is_numeric($item)) {
                 $item = (string) $item;
             }
