@@ -460,7 +460,8 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
     private function getDuration()
     {
-        $duration = microtime(true) - $this->_startTime;
+        $duration = (microtime(true) - $this->_startTime) / 1000;
+        $this->_startTime = microtime(true);
         return $duration.' s';
     }
 

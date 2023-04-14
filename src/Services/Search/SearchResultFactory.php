@@ -1,8 +1,8 @@
 <?php namespace Semknox\Core\Services\Search;
 
-use Semknox\Core\Exceptions\LogicException;
 use Semknox\Core\Services\Search\Filters\CollectionFilter;
 use Semknox\Core\Services\Search\Filters\BucketFilter;
+use Semknox\Core\Services\Search\Filters\ColorFilter;
 use Semknox\Core\Services\Search\Filters\RangeFilter;
 use Semknox\Core\Services\Search\Filters\TreeFilter;
 use Semknox\Core\Services\Search\Sorting\SortingOption;
@@ -90,6 +90,10 @@ abstract class SearchResultFactory
 
             case 'BUCKET':
                 $filter = new BucketFilter($filterData);
+                break;
+
+            case 'COLOR':
+                $filter = new ColorFilter($filterData);
                 break;
         }
 

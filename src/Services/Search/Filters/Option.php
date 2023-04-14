@@ -105,6 +105,18 @@ class Option {
         return $this->optionData['name'];
     }
 
+
+    /**
+     * Return the color of the filter option.
+     * @return string
+     */
+    public function getColor()
+    {
+        return isset($this->optionData['color'])
+            ? $this->optionData['color']
+            : '';
+    }
+
     /**
      * Return the name of the filter.
      * @return string
