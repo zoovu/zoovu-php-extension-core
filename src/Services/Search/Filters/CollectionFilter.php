@@ -22,11 +22,12 @@ class CollectionFilter extends AbstractFilter implements FilterInterface {
 
             // convert key => value to concept format
             $result[] = new Option([
-               'key'      => $value['value'],
-               'name'     => $value['name'],
-               'value'    => $value['value'],
-               'count'    => $value['count'],
-               'children' => []
+                'key'      => $value['value'],
+                'name'     => $value['name'],
+                'value'    => $value['value'],
+                'count'    => $value['count'],
+                'color'    => isset($value['color']) ? $value['color'] : '',
+                'children' => []
            ], $this->getActiveOptions());
         }
 
