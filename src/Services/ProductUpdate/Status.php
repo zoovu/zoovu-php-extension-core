@@ -175,8 +175,10 @@ class Status
             throw new \RuntimeException('Invalid phase');
         }
 
-        $this->changed = true;
-        $this->phaseChanged = true;
+        if ($this->getPhase() !== $phase) {
+            $this->changed = true;
+            $this->phaseChanged = true;
+        }
 
         $this->data['phase'] = $phase;
     }
