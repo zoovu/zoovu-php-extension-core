@@ -199,11 +199,11 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $timeout = $this->status->setTimeout();
             $this->config->getLoggingService()->error('POST products/batch/initiate: '.$timeout.' minutes timeout');
             $this->config->getLoggingService()->error($e->getMessage());
-            throw new Exception($e->getMessage()); // to get a log entry
+            //throw new Exception($e->getMessage()); // to get a log entry
         }
 
         // check if request was successful before setting phase to uploading
-        if ($response['status'] == 'success') {
+        if (is_array($response) && $response['status'] == 'success') {
             $this->setPhaseTo(($this->status)::PHASE_UPLOADING);
         } else {
             $timeout = $this->status->setTimeout();
@@ -251,12 +251,11 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $timeout = $this->status->setTimeout();
             $this->config->getLoggingService()->error('POST products/batch/upload: '.$timeout.' minutes timeout');
             $this->config->getLoggingService()->error($e->getMessage());
-
-            throw new Exception($e->getMessage()); // to get a log entry
+            //throw new Exception($e->getMessage()); // to get a log entry
         }
     
         // check if request was successful before increasing number of uploaded
-        if($response['status'] == 'success'){
+        if(is_array($response) && $response['status'] == 'success'){
 
             $numberOfProducts = count($products);
 
@@ -281,11 +280,17 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
 
             if (isset($response['validation'][0]['schemaErrors'][0])) {
                 $this->config->getLoggingService()->error('products/batch/upload VALIDATION FAILED:');
+                if(isset($response['validation'][0]['schemaErrors']['product']) && isset($response['validation'][0]['schemaErrors']['product']['identifier'])){
+                    $this->config->getLoggingService()->error('product: '. $response['validation'][0]['schemaErrors']['product']['identifier']);
+                }
                 $this->config->getLoggingService()->error(json_encode($response));
             }
 
             if (isset($response['status']) && $response['status'] !== 'success') {
                 $this->config->getLoggingService()->error('products/batch/upload VALIDATION FAILED:');
+                if (isset($response['validation'][0]['schemaErrors']['product']) && isset($response['validation'][0]['schemaErrors']['product']['identifier'])) {
+                    $this->config->getLoggingService()->error('product: ' . $response['validation'][0]['schemaErrors']['product']['identifier']);
+                }
                 $this->config->getLoggingService()->error(json_encode($response));
             }
 
@@ -356,8 +361,7 @@ class InitialUploadService extends ProductUpdateServiceAbstract {
             $timeout = $this->status->setTimeout();
             $this->config->getLoggingService()->error('POST products/batch/start: '.$timeout.' minutes timeout');
             $this->config->getLoggingService()->error($e->getMessage());
-     
-            throw new Exception($e->getMessage()); // to get a log entry
+            //throw new Exception($e->getMessage()); // to get a log entry
         }
 
         if($response['status'] != 'success'){
